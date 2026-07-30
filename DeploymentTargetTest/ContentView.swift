@@ -16,6 +16,10 @@ struct ContentView: View {
                     .scaledToFit()
             }
             Text("Hello, world!")
+            
+            Button("Brighter") {
+                BrightnessController.setScreenBrightness(100)
+            }
         }
         .padding()
     }
