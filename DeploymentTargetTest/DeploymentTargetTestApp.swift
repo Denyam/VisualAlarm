@@ -1,5 +1,7 @@
 //
-// DeploymentTargetTestMacApp
+//  DeploymentTargetTest
+//
+//  Created by Denis on 29.07.2026.
 //
 
 import AppKit
