@@ -1,4 +1,6 @@
+#if os(iOS) || os(macOS)
 import UIKit
+#endif
 
 /// Handles screen brightness adjustments.
 public class BrightnessController {
@@ -9,8 +11,18 @@ public class BrightnessController {
     public func setBrightness(to level: CGFloat) -> Bool {
         // Clamp level to valid range
         let clamped = max(0.0, min(1.0, level))
-        guard UIScreen.main.responds(to: #selector(setter: UIScreen.brightness)) else { return false }
+        #if os(iOS)
         UIScreen.main.brightness = clamped
         return true
+        #else
+        // macOS does not provide a direct brightness API in this context.
+        return false
+        #endif
     }
 }
+#if os(macOS)
+// Provide a stub for macOS build to satisfy references.
+public extension BrightnessController {
+    func setBrightness(to macLevel: CGFloat) -> Bool { false }
+}
+#endif
