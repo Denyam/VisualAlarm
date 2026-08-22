@@ -39,7 +39,7 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
 
 ## 3. Xcode project surgery
 
-- [ ] `VisualAlarmAgent` target — **.app bundle** (LSUIElement Info.plist,
+- [x] `VisualAlarmAgent` target — **.app bundle** (LSUIElement Info.plist,
       sandbox kills bare binaries — see AGENTS.md), macOS-only synchronized folder
 - [ ] `VisualAlarmRunner.app` target — LSUIElement Info.plist, macOS-only folder
 - [ ] Copy Files phases: agent + runner → `Contents/Library/LoginItems`;
