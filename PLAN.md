@@ -26,13 +26,16 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
 
 ## 2. Shared layer
 
-- [ ] `Alarm` model (id, hour, minute, label, isEnabled, weekdays) → commit "Add alarm model"
-- [ ] Unit tests (Codable round-trip, validation) → commit tests
-- [ ] `AlarmStore` — JSON in App Group container, injectable directory URL,
-      ObservableObject → commit "Add alarm store"
-- [ ] Store unit tests (persistence round-trip, concurrent access basics) → commit tests
-- [ ] `DarwinNotificationCenter` wrapper (post/observe) → commit
-- [ ] Wrapper unit tests (in-process post→observe) → commit tests
+- [x] `Alarm` model (id, hour, minute, label, isEnabled, weekdays) → "Add alarm model"
+- [x] Unit tests (Codable round-trip, validation) → "Add alarm model unit tests"
+- [x] `AlarmStore` — JSON in App Group container, injectable directory URL,
+      ObservableObject → "Add alarm store"
+- [x] Store unit tests → "Add alarm store unit tests"
+- [x] `DarwinNotificationCenter` wrapper (post/observe/cancel tokens)
+      → "Add darwin notification center wrapper"
+- [x] Wrapper unit tests → "Add darwin notification center unit tests"
+- [x] GATE: 15/15 tests green on macOS destination AND iOS Simulator
+      (iPhone 17 Pro, iOS 26.3.1)
 
 ## 3. Xcode project surgery
 
