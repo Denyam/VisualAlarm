@@ -62,8 +62,10 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
 - [x] `MacBrightnessController` (IOKit enumerate/get/set/restore-original,
       dlsym'd symbols, `MacBrightnessControlling` protocol as mock seam)
       → "Add mac brightness controller over IOKit" + symbol-resolution tests
-- [ ] `FlickerEffectController` — async loop, injected clock/interval, cancel =
-      restore state → commit; unit tests (sequence, cancellation) → test commit
+- [x] `FlickerEffectController` — async loop, injected clock/interval, cancel =
+      restore state exactly once ("Add flicker effect controller with
+      injectable clock"); `VirtualClock` test seam drives ticks deterministically
+      (sequence + cancellation tests)
 - [ ] Runner main: reads fire-request from App Group store, loops system
       `NSSound`, Stop window (no timeout), single-instance guard → commit
 - [ ] GATE (manual): launch runner directly — flicker + sound + Stop restores
