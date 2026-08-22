@@ -37,6 +37,18 @@ struct AlarmTests {
         #expect(alarm.weekdays == [1, 4])
     }
 
+    @Test func clampsOnMutationAfterInitialization() {
+        var alarm = Alarm(hour: 6, minute: 30)
+
+        alarm.hour = 99
+        alarm.minute = -5
+        alarm.weekdays = [2, 0, 11]
+
+        #expect(alarm.hour == 23)
+        #expect(alarm.minute == 0)
+        #expect(alarm.weekdays == [2])
+    }
+
     @Test func emptyWeekdaySetStaysEmpty() {
         let alarm = Alarm(hour: 5, minute: 15, weekdays: [])
         #expect(alarm.weekdays.isEmpty)
