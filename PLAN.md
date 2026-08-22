@@ -41,7 +41,7 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
 
 - [x] `VisualAlarmAgent` target — **.app bundle** (LSUIElement Info.plist,
       sandbox kills bare binaries — see AGENTS.md), macOS-only synchronized folder
-- [ ] `VisualAlarmRunner.app` target — LSUIElement Info.plist, macOS-only folder
+- [x] `VisualAlarmRunner.app` target — LSUIElement Info.plist, macOS-only folder
 - [ ] Copy Files phases: agent + runner → `Contents/Library/LoginItems`;
       plist → `Contents/Library/LaunchAgents`; dependency ordering
       (helpers build before app)
