@@ -42,16 +42,20 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
 - [x] `VisualAlarmAgent` target — **.app bundle** (LSUIElement Info.plist,
       sandbox kills bare binaries — see AGENTS.md), macOS-only synchronized folder
 - [x] `VisualAlarmRunner.app` target — LSUIElement Info.plist, macOS-only folder
-- [ ] Copy Files phases: agent + runner → `Contents/Library/LoginItems`;
+- [x] Copy Files phases: agent + runner → `Contents/Library/LoginItems`;
       plist → `Contents/Library/LaunchAgents`; dependency ordering
-      (helpers build before app)
-- [ ] Entitlements files ×3: App Sandbox + App Group `co.denis.VisualAlarm.shared`
-- [ ] Static agent plist (`Label`, `BundleProgram` → nested agent bundle path,
-      `RunAtLoad`, `KeepAlive`) — verify SMAppService accepts nested-bundle
-      BundleProgram at step 5 gate
-- [ ] Schemes for CLI builds/tests
-- [ ] GATE: `xcodebuild build` green for macOS AND iOS Simulator destinations
-      → commit(s)
+      (helpers build before app) — implemented as a macOS-only Run Script
+      phase with declared I/O instead: `ValidateEmbeddedBinary` rejects any
+      cross-platform CopyFiles phase, and `platformFilters` on PBXBuildFile
+      does not apply to copy phases (see AGENTS.md)
+- [x] Entitlements files ×3: App Sandbox + App Group `co.denis.VisualAlarm.shared`
+- [x] Static agent plist (`Label`, `BundleProgram` → nested agent bundle path,
+      `RunAtLoad`, `KeepAlive`) — SMAppService acceptance of nested-bundle
+      BundleProgram still verified at step 5 gate
+- [x] Schemes for CLI builds/tests (`VisualAlarmAgent`, `VisualAlarmRunner`)
+- [x] GATE: `xcodebuild build` green for macOS AND iOS Simulator destinations;
+      verified bundle layout (LoginItems ×2 apps, LaunchAgents plist) and iOS
+      bundle stays flat
 
 ## 4. Runner app (macOS)
 
