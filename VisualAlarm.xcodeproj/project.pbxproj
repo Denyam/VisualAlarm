@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C0DE000000000000000000C6 /* VisualAlarmAgent.app in Embed Helper Apps */ = {isa = PBXBuildFile; fileRef = C0DE000000000000000000A2 /* VisualAlarmAgent.app */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		3909CF8B302F70A200912A27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,12 +25,34 @@
 			remoteGlobalIDString = 3909CF7C302F709E00912A27;
 			remoteInfo = VisualAlarm;
 		};
+		C0DE000000000000000000C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3909CF75302F709E00912A27 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0DE000000000000000000A3;
+			remoteInfo = VisualAlarmAgent;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C0DE000000000000000000C5 /* Embed Helper Apps in Contents/Library/LoginItems */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LoginItems;
+			dstSubfolderSpec = 1;
+			files = (
+				C0DE000000000000000000C6 /* VisualAlarmAgent.app in Embed Helper Apps */,
+			);
+			name = "Embed Helper Apps in Contents/Library/LoginItems";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		3909CF7D302F709E00912A27 /* VisualAlarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3909CF8A302F70A200912A27 /* VisualAlarmTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VisualAlarmTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3909CF94302F70A200912A27 /* VisualAlarmUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VisualAlarmUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0DE000000000000000000A2 /* VisualAlarmAgent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualAlarmAgent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -56,6 +82,11 @@
 		3909CF97302F70A200912A27 /* VisualAlarmUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = VisualAlarmUITests;
+			sourceTree = "<group>";
+		};
+		C0DE000000000000000000A1 /* VisualAlarmAgent */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = VisualAlarmAgent;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -89,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				3909CF7F302F709E00912A27 /* VisualAlarm */,
+				C0DE000000000000000000A1 /* VisualAlarmAgent */,
 				3909CF8D302F70A200912A27 /* VisualAlarmTests */,
 				3909CF97302F70A200912A27 /* VisualAlarmUITests */,
 				3909CF7E302F709E00912A27 /* Products */,
@@ -99,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				3909CF7D302F709E00912A27 /* VisualAlarm.app */,
+				C0DE000000000000000000A2 /* VisualAlarmAgent.app */,
 				3909CF8A302F70A200912A27 /* VisualAlarmTests.xctest */,
 				3909CF94302F70A200912A27 /* VisualAlarmUITests.xctest */,
 			);
@@ -115,10 +148,12 @@
 				3909CF79302F709E00912A27 /* Sources */,
 				3909CF7A302F709E00912A27 /* Frameworks */,
 				3909CF7B302F709E00912A27 /* Resources */,
+				C0DE000000000000000000C5 /* Embed Helper Apps in Contents/Library/LoginItems */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C0DE000000000000000000C2 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				3909CF7F302F709E00912A27 /* VisualAlarm */,
@@ -176,6 +211,27 @@
 			productReference = 3909CF94302F70A200912A27 /* VisualAlarmUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		C0DE000000000000000000A3 /* VisualAlarmAgent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0DE000000000000000000A7 /* Build configuration list for PBXNativeTarget "VisualAlarmAgent" */;
+			buildPhases = (
+				C0DE000000000000000000A4 /* Sources */,
+				C0DE000000000000000000A6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C0DE000000000000000000A1 /* VisualAlarmAgent */,
+			);
+			name = VisualAlarmAgent;
+			packageProductDependencies = (
+			);
+			productName = VisualAlarmAgent;
+			productReference = C0DE000000000000000000A2 /* VisualAlarmAgent.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -197,6 +253,9 @@
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = 3909CF7C302F709E00912A27;
 					};
+					C0DE000000000000000000A3 = {
+						CreatedOnToolsVersion = 26.3;
+					};
 				};
 			};
 			buildConfigurationList = 3909CF78302F709E00912A27 /* Build configuration list for PBXProject "VisualAlarm" */;
@@ -214,6 +273,7 @@
 			projectRoot = "";
 			targets = (
 				3909CF7C302F709E00912A27 /* VisualAlarm */,
+				C0DE000000000000000000A3 /* VisualAlarmAgent */,
 				3909CF89302F70A200912A27 /* VisualAlarmTests */,
 				3909CF93302F70A200912A27 /* VisualAlarmUITests */,
 			);
@@ -236,6 +296,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3909CF92302F70A200912A27 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0DE000000000000000000A6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -266,6 +333,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0DE000000000000000000A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -278,6 +352,11 @@
 			isa = PBXTargetDependency;
 			target = 3909CF7C302F709E00912A27 /* VisualAlarm */;
 			targetProxy = 3909CF95302F70A200912A27 /* PBXContainerItemProxy */;
+		};
+		C0DE000000000000000000C2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0DE000000000000000000A3 /* VisualAlarmAgent */;
+			targetProxy = C0DE000000000000000000C1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -580,6 +659,50 @@
 			};
 			name = Release;
 		};
+		C0DE000000000000000000A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ETFKU52LQ6;
+				ENABLE_APP_SANDBOX = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.denis.VisualAlarm.agent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C0DE000000000000000000A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ETFKU52LQ6;
+				ENABLE_APP_SANDBOX = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.denis.VisualAlarm.agent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -615,6 +738,15 @@
 			buildConfigurations = (
 				3909CFA5302F70A200912A27 /* Debug */,
 				3909CFA6302F70A200912A27 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0DE000000000000000000A7 /* Build configuration list for PBXNativeTarget "VisualAlarmAgent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0DE000000000000000000A8 /* Debug */,
+				C0DE000000000000000000A9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
