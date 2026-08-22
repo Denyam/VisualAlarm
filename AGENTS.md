@@ -22,10 +22,12 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
 ## Architecture (macOS)
 
 - `VisualAlarm.app` — SwiftUI UI; owns registration + alarm store writes.
-- `Contents/MacOS/VisualAlarmAgent` — resident scheduler binary
-  (`RunAtLoad` + `KeepAlive`), launched by launchd via
+- `Contents/Library/LoginItems/VisualAlarmAgent.app` — resident scheduler
+  agent (`RunAtLoad` + `KeepAlive`), launched by launchd via
   `SMAppService.agent(plistName:)`. Static plist ships inside the app bundle at
-  `Contents/Library/LaunchAgents/co.denis.VisualAlarm.agent.plist`.
+  `Contents/Library/LaunchAgents/co.denis.VisualAlarm.agent.plist`; its
+  `BundleProgram` path points into the nested agent bundle (sandboxed
+  executables cannot be bare binaries — see Gotchas).
 - `Contents/Library/LoginItems/VisualAlarmRunner.app` — LSUIElement alarm
   window: system-sound loop, brightness flicker, Stop button (rings until
   stopped), single-instance guard.
@@ -57,3 +59,17 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
 ## Gotchas
 
 <!-- Append durable discoveries here (signing quirks, IOKit behavior, …) -->
+
+### Spike 2026-08-22: IOKit brightness under App Sandbox (`spike/`, rerun via `spike/run_spike.sh`)
+- `IODisplayGet/SetFloatParameter` with `kIODisplayBrightnessKey`
+  (= `"brightness"`) WORKS inside the App Sandbox — verified with ad-hoc
+  signing: container created, all calls return 0, min→max→restore observed.
+- **Sandboxed executables MUST be `.app` bundles**: a bare Mach-O with the
+  App Sandbox entitlement dies with SIGILL during `libsecinit` ("Info.plist …
+  no value for kCFBundleIdentifierKey"). This is why the agent ships as a
+  bundle, not a plain binary.
+- Swift's IOKit overlay does not export `IODisplay*FloatParameter`; expose
+  them via an ObjC bridging header (`#import <IOKit/graphics/IOGraphicsLib.h>`)
+  or `dlsym`.
+- Don't detect sandboxing by probing `$HOME` writes (unreliable on this OS
+  build); check for `~/Library/Containers/<bundle-id>` instead.

@@ -15,12 +15,14 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
 
 ## 1. Spike — IOKit brightness under App Sandbox (blocking go/no-go)
 
-- [ ] Single-file swiftc harness: enumerate `IODisplayConnect`,
+- [x] Single-file swiftc harness: enumerate `IODisplayConnect`,
       `IODisplaySetFloatParameter(kIODisplayBrightnessKey)` min↔max↔restore
-- [ ] Ad-hoc codesign WITH `com.apple.security.app-sandbox`, run manually,
-      observe real display toggle
-- [ ] Record outcome in AGENTS.md Gotchas; if blocked → halt + discuss fallbacks
-      (temporary exception entitlement vs. architecture change)
+- [x] Ad-hoc codesign WITH `com.apple.security.app-sandbox`, run manually,
+      observe real display toggle — PASS unsandboxed AND sandboxed
+      (container created; all rc=0; 0.0→1.0→restore observed)
+- [x] Outcome recorded in AGENTS.md Gotchas → **GO**. Side finding: bare
+      executables SIGILL under App Sandbox ⇒ agent must ship as `.app` bundle
+      (step 3 updated).
 
 ## 2. Shared layer
 
@@ -34,13 +36,16 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
 
 ## 3. Xcode project surgery
 
-- [ ] `VisualAlarmAgent` target — bare binary, macOS-only synchronized folder
+- [ ] `VisualAlarmAgent` target — **.app bundle** (LSUIElement Info.plist,
+      sandbox kills bare binaries — see AGENTS.md), macOS-only synchronized folder
 - [ ] `VisualAlarmRunner.app` target — LSUIElement Info.plist, macOS-only folder
-- [ ] Copy Files phases: agent → `Contents/MacOS`; runner →
-      `Contents/Library/LoginItems`; plist → `Contents/Library/LaunchAgents`;
-      dependency ordering (helpers build before app)
+- [ ] Copy Files phases: agent + runner → `Contents/Library/LoginItems`;
+      plist → `Contents/Library/LaunchAgents`; dependency ordering
+      (helpers build before app)
 - [ ] Entitlements files ×3: App Sandbox + App Group `co.denis.VisualAlarm.shared`
-- [ ] Static agent plist (`Label`, `BundleProgram`, `RunAtLoad`, `KeepAlive`)
+- [ ] Static agent plist (`Label`, `BundleProgram` → nested agent bundle path,
+      `RunAtLoad`, `KeepAlive`) — verify SMAppService accepts nested-bundle
+      BundleProgram at step 5 gate
 - [ ] Schemes for CLI builds/tests
 - [ ] GATE: `xcodebuild build` green for macOS AND iOS Simulator destinations
       → commit(s)
