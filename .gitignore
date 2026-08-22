@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Xcode
+DerivedData/
+build/
+*.xcarchive
+xcuserdata/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# opencode local tooling
+.opencode/node_modules/
