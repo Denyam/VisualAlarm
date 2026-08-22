@@ -73,3 +73,14 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
   or `dlsym`.
 - Don't detect sandboxing by probing `$HOME` writes (unreliable on this OS
   build); check for `~/Library/Containers/<bundle-id>` instead.
+
+### Embedding mac helpers in a multiplatform target (step 3 findings)
+- A single multiplatform target cannot use CopyFiles phases for macOS-only
+  helpers: on iOS builds `ValidateEmbeddedBinary` fails ("target is built for
+  iOS but contains embedded content built for macOS") even if the phase
+  destination points outside the bundle, and `platformFilters` on PBXBuildFile
+  is not honored for copy-phase members.
+- Working setup: Run Script phase that early-exits unless
+  `$PLATFORM_NAME == macosx`, with declared input/output paths; requires
+  `ENABLE_USER_SCRIPT_SANDBOXING = NO` on the app target (declared output
+  trees are not writable recursively under the script sandbox).
