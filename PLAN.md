@@ -59,8 +59,9 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
 
 ## 4. Runner app (macOS)
 
-- [ ] `MacBrightnessController` (IOKit enumerate/get/set/restore-original)
-      → commit; unit tests with injected service-mock seam → test commit
+- [x] `MacBrightnessController` (IOKit enumerate/get/set/restore-original,
+      dlsym'd symbols, `MacBrightnessControlling` protocol as mock seam)
+      → "Add mac brightness controller over IOKit" + symbol-resolution tests
 - [ ] `FlickerEffectController` — async loop, injected clock/interval, cancel =
       restore state → commit; unit tests (sequence, cancellation) → test commit
 - [ ] Runner main: reads fire-request from App Group store, loops system
