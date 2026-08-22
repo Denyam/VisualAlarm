@@ -1,6 +1,4 @@
-//#if os(iOS) || os(macOS)
 import UIKit
-//#endif
 
 /// Handles screen brightness adjustments.
 public class BrightnessController {
