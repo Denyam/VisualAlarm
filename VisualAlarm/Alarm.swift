@@ -12,10 +12,16 @@ struct Alarm: Identifiable, Codable, Equatable, Hashable {
 
     var id: UUID
     var label: String
-    var hour: Int
-    var minute: Int
+    var hour: Int {
+        didSet { hour = Self.clampedHour(hour) }
+    }
+    var minute: Int {
+        didSet { minute = Self.clampedMinute(minute) }
+    }
     var isEnabled: Bool
-    var weekdays: Set<Int>
+    var weekdays: Set<Int> {
+        didSet { weekdays = Self.filteredWeekdays(weekdays) }
+    }
 
     init(
         id: UUID = UUID(),
@@ -27,9 +33,23 @@ struct Alarm: Identifiable, Codable, Equatable, Hashable {
     ) {
         self.id = id
         self.label = label
-        self.hour = min(max(hour, 0), 23)
-        self.minute = min(max(minute, 0), 59)
+        // Property observers don't run during initialization, so the
+        // normalization has to be applied here explicitly as well.
+        self.hour = Self.clampedHour(hour)
+        self.minute = Self.clampedMinute(minute)
         self.isEnabled = isEnabled
-        self.weekdays = Set(weekdays.filter(Self.allWeekdays.contains))
+        self.weekdays = Self.filteredWeekdays(weekdays)
+    }
+
+    private static func clampedHour(_ value: Int) -> Int {
+        min(max(value, 0), 23)
+    }
+
+    private static func clampedMinute(_ value: Int) -> Int {
+        min(max(value, 0), 59)
+    }
+
+    private static func filteredWeekdays(_ weekdays: Set<Int>) -> Set<Int> {
+        Set(weekdays.filter(allWeekdays.contains))
     }
 }
