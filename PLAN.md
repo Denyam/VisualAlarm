@@ -66,8 +66,10 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
       restore state exactly once ("Add flicker effect controller with
       injectable clock"); `VirtualClock` test seam drives ticks deterministically
       (sequence + cancellation tests)
-- [ ] Runner main: reads fire-request from App Group store, loops system
-      `NSSound`, Stop window (no timeout), single-instance guard → commit
+- [x] Runner main: reads first enabled alarm from the App Group store for the
+      window label, loops system `NSSound("Funk")`, Stop window (no timeout),
+      single-instance guard via `NSRunningApplication`, `VA_SMOKE_SECONDS`
+      auto-stop hook for automated verification → "Add alarm runner app"
 - [ ] GATE (manual): launch runner directly — flicker + sound + Stop restores
       original brightness
 
