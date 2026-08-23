@@ -43,7 +43,7 @@
 		3909CF94302F70A200912A27 /* VisualAlarmUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VisualAlarmUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0DE000000000000000000A2 /* VisualAlarmAgent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualAlarmAgent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0DE000000000000000000B2 /* VisualAlarmRunner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualAlarmRunner.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C0DE000000000000000000CA /* co.denis.VisualAlarm.agent.plist */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text.plist.xml; path = "co.denis.VisualAlarm.agent.plist"; sourceTree = "<group>"; };
+		C0DE000000000000000000CA /* co.denis.VisualAlarm.agent.plist */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text.plist.xml; path = co.denis.VisualAlarm.agent.plist; sourceTree = "<group>"; };
 		C0DE000000000000000000CC /* VisualAlarm.entitlements */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text.plist.entitlements; name = VisualAlarm.entitlements; path = Support/VisualAlarm.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -55,6 +55,16 @@
 			};
 			target = 3909CF7C302F709E00912A27 /* VisualAlarm */;
 		};
+		C0DE000000000000000000E1 /* Exceptions for "VisualAlarm" folder in "VisualAlarmRunner" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				BrightnessController.swift,
+				ContentView.swift,
+				VisualAlarmApp.swift,
+			);
+			target = C0DE000000000000000000B3 /* VisualAlarmRunner */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -62,6 +72,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				3909CFAB30320C4100912A27 /* Exceptions for "VisualAlarm" folder in "VisualAlarm" target */,
+				C0DE000000000000000000E1 /* Exceptions for "VisualAlarm" folder in "VisualAlarmRunner" target */,
 			);
 			path = VisualAlarm;
 			sourceTree = "<group>";
@@ -84,15 +95,6 @@
 		C0DE000000000000000000B1 /* VisualAlarmRunner */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = VisualAlarmRunner;
-			sourceTree = "<group>";
-		};
-		C0DE000000000000000000CB /* Support */ = {
-			isa = PBXGroup;
-			children = (
-				C0DE000000000000000000CA /* co.denis.VisualAlarm.agent.plist */,
-				C0DE000000000000000000CC /* VisualAlarm.entitlements */,
-			);
-			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -152,6 +154,15 @@
 				3909CF94302F70A200912A27 /* VisualAlarmUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C0DE000000000000000000CB /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				C0DE000000000000000000CA /* co.denis.VisualAlarm.agent.plist */,
+				C0DE000000000000000000CC /* VisualAlarm.entitlements */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,6 +274,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				C0DE000000000000000000B1 /* VisualAlarmRunner */,
+				3909CF7F302F709E00912A27 /* VisualAlarm */,
 			);
 			name = VisualAlarmRunner;
 			packageProductDependencies = (
@@ -364,7 +376,6 @@
 /* Begin PBXShellScriptBuildPhase section */
 		C0DE000000000000000000D1 /* Embed Helpers (macOS only) */ = {
 			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 0;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -566,11 +577,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ETFKU52LQ6;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -587,15 +600,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = co.denis.VisualAlarm;
-				VA_HELPER_DST = "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Library/LoginItems";
-				"VA_HELPER_DST[sdk=iphoneos*]" = "$(TEMP_DIR)/va-ios-discard/LoginItems";
-				"VA_HELPER_DST[sdk=iphonesimulator*]" = "$(TEMP_DIR)/va-ios-discard/LoginItems";
-				VA_PLIST_DST = "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Library/LaunchAgents";
-				"VA_PLIST_DST[sdk=iphoneos*]" = "$(TEMP_DIR)/va-ios-discard/LaunchAgents";
-				"VA_PLIST_DST[sdk=iphonesimulator*]" = "$(TEMP_DIR)/va-ios-discard/LaunchAgents";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -608,6 +613,12 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VA_HELPER_DST = "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Library/LoginItems";
+				"VA_HELPER_DST[sdk=iphoneos*]" = "$(TEMP_DIR)/va-ios-discard/LoginItems";
+				"VA_HELPER_DST[sdk=iphonesimulator*]" = "$(TEMP_DIR)/va-ios-discard/LoginItems";
+				VA_PLIST_DST = "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Library/LaunchAgents";
+				"VA_PLIST_DST[sdk=iphoneos*]" = "$(TEMP_DIR)/va-ios-discard/LaunchAgents";
+				"VA_PLIST_DST[sdk=iphonesimulator*]" = "$(TEMP_DIR)/va-ios-discard/LaunchAgents";
 				XROS_DEPLOYMENT_TARGET = 26.2;
 			};
 			name = Debug;
@@ -617,11 +628,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ETFKU52LQ6;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -638,15 +651,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = co.denis.VisualAlarm;
-				VA_HELPER_DST = "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Library/LoginItems";
-				"VA_HELPER_DST[sdk=iphoneos*]" = "$(TEMP_DIR)/va-ios-discard/LoginItems";
-				"VA_HELPER_DST[sdk=iphonesimulator*]" = "$(TEMP_DIR)/va-ios-discard/LoginItems";
-				VA_PLIST_DST = "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Library/LaunchAgents";
-				"VA_PLIST_DST[sdk=iphoneos*]" = "$(TEMP_DIR)/va-ios-discard/LaunchAgents";
-				"VA_PLIST_DST[sdk=iphonesimulator*]" = "$(TEMP_DIR)/va-ios-discard/LaunchAgents";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -659,6 +664,12 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VA_HELPER_DST = "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Library/LoginItems";
+				"VA_HELPER_DST[sdk=iphoneos*]" = "$(TEMP_DIR)/va-ios-discard/LoginItems";
+				"VA_HELPER_DST[sdk=iphonesimulator*]" = "$(TEMP_DIR)/va-ios-discard/LoginItems";
+				VA_PLIST_DST = "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Library/LaunchAgents";
+				"VA_PLIST_DST[sdk=iphoneos*]" = "$(TEMP_DIR)/va-ios-discard/LaunchAgents";
+				"VA_PLIST_DST[sdk=iphonesimulator*]" = "$(TEMP_DIR)/va-ios-discard/LaunchAgents";
 				XROS_DEPLOYMENT_TARGET = 26.2;
 			};
 			name = Release;
