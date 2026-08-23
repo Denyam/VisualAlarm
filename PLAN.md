@@ -86,8 +86,13 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
       alarms ignored, no double-fires ("Add alarm scheduler…"); deterministic
       FakeClock tests (fire-late, stale-skip, chunked wait, store pickup)
       → test commit
-- [ ] Agent entrypoint — wires store+scheduler, writes fire-request record,
-      spawns runner via RunnerLauncher protocol → commit; spy-based tests → test commit
+- [x] Agent entrypoint — wires store+scheduler, writes fire-request record,
+      spawns runner via `RunnerLauncher` (NSWorkspace opener injectable);
+      Darwin `.alarmsDidChange` + `NSWorkspace.didWakeNotification` both
+      resync; `VA_SMOKE_SECONDS` graceful-exit hook for automated checks
+      → "Wire agent entrypoint to scheduler and runner"; spy tests for the
+      launcher seam → test commit. Agent target now syncs the shared sources
+      folder with membership exceptions
 - [ ] GATE (manual E2E): register agent via SMAppService on dev build, schedule
       +2 min alarm, verify firing incl. sleep/wake catch-up; unregister cleanly
 
