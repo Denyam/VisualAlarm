@@ -8,6 +8,7 @@ import Testing
 
 @testable import VisualAlarm
 
+@Suite(.serialized)
 struct DarwinNotificationCenterTests {
 
     private let center = DarwinNotificationCenter.shared

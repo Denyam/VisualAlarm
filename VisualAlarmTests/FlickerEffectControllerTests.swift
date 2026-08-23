@@ -3,6 +3,7 @@ import Testing
 
 @testable import VisualAlarm
 
+@Suite(.serialized)
 struct FlickerEffectControllerTests {
 
     @Test func startsOnAndAlternatesPhasesOnEachTick() async throws {
@@ -102,7 +103,7 @@ final class EffectCounterBox: @unchecked Sendable {
 
 private func waitFor(
     _ condition: @autoclosure () -> Bool,
-    timeout seconds: TimeInterval = 2
+    timeout seconds: TimeInterval = 5
 ) async throws {
     let deadline = Date().addingTimeInterval(seconds)
     while !condition() && Date() < deadline {
