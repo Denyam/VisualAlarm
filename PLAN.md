@@ -98,9 +98,9 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
 
 ## 6. Registration + UI (macOS)
 
-- [ ] `SMAppServiceRegistrar` (register/unregister/status mapping, deep link to
-      Login Items settings when `.requiresApproval`) → commit; status-mapping
-      unit tests → test commit
+- [x] `SMAppServiceRegistrar` (register/unregister/status mapping, deep link to
+      Login Items settings when `.requiresApproval`) → "Add SMAppService
+      registrar wrapper"; status-mapping unit tests (incl. `notFound`) → test commit
 - [ ] SwiftUI alarm list/editor ViewModels (CRUD → store, enable toggles,
       weekday chips, Test-now button) → commit; ViewModel unit tests → test commit
 - [ ] macOS status banner for agent registration state → commit
