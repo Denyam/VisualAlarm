@@ -74,6 +74,15 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
 - Don't detect sandboxing by probing `$HOME` writes (unreliable on this OS
   build); check for `~/Library/Containers/<bundle-id>` instead.
 
+### Runner bootstrap: delegate must be installed before `app.run()` (step 4)
+- `NSApplication.delegate` set inside `Task { @MainActor }` executes only
+  AFTER `app.run()` has already delivered `applicationDidFinishLaunching` —
+  the app then runs "headless" (no window/sound/effects) while termination
+  callbacks still work. Top-level main.swift runs on the main thread, so use
+  `MainActor.assumeIsolated { ... }` for synchronous MainActor setup.
+- The single-instance guard exits silently by design; it now prints a line so
+  a stray background instance doesn't masquerade as "app does nothing".
+
 ### Embedding mac helpers in a multiplatform target (step 3 findings)
 - A single multiplatform target cannot use CopyFiles phases for macOS-only
   helpers: on iOS builds `ValidateEmbeddedBinary` fails ("target is built for

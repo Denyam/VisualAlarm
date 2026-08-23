@@ -25,6 +25,14 @@ final class MacBrightnessController: MacBrightnessControlling {
     private var services: [io_service_t] = []
     private var originals: [(service: io_service_t, value: Float)] = []
 
+    /// Number of displays currently held after `storeCurrentLevels`.
+    var displayCount: Int { services.count }
+
+    /// Whether brightness manipulation is available at all.
+    var isSupported: Bool {
+        getParam != nil && setParam != nil
+    }
+
     init(
         symbolProvider: (String) -> UnsafeMutableRawPointer? =
             MacBrightnessController.loadSymbol
@@ -49,14 +57,10 @@ final class MacBrightnessController: MacBrightnessControlling {
         return dlsym(handle, name)
     }
 
-    func isSupported() -> Bool {
-        getParam != nil && setParam != nil
-    }
-
     /// Snapshots the current brightness of every connected display so that
     /// `restoreStoredLevels` can bring them back later.
     func storeCurrentLevels() {
-        guard isSupported() else { return }
+        guard isSupported else { return }
         releaseServices()
 
         var iterator: io_iterator_t = 0
@@ -80,7 +84,7 @@ final class MacBrightnessController: MacBrightnessControlling {
 
     @discardableResult
     func setAllDisplays(to value: Float) -> Bool {
-        guard isSupported(), !services.isEmpty else { return false }
+        guard isSupported, !services.isEmpty else { return false }
         return services.allSatisfy { service in
             setParam!(service, 0, Self.brightnessKey, value) == KERN_SUCCESS
         }
