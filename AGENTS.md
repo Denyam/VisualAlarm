@@ -84,3 +84,7 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
   `$PLATFORM_NAME == macosx`, with declared input/output paths; requires
   `ENABLE_USER_SCRIPT_SANDBOXING = NO` on the app target (declared output
   trees are not writable recursively under the script sandbox).
+- The embed script must `rm -rf` destination helper bundles before copying:
+  BSD `cp -R` merges INTO an existing directory, silently leaving stale
+  binaries embedded. Phase also sets `alwaysOutOfDate = 1` so incremental
+  builds can never skip re-embedding.

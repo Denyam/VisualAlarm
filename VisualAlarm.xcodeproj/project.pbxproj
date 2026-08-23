@@ -376,6 +376,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		C0DE000000000000000000D1 /* Embed Helpers (macOS only) */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -392,7 +393,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "if [ \"$PLATFORM_NAME\" != \"macosx\" ]; then\n\texit 0\nfi\nset -euo pipefail\nmkdir -p \"$VA_HELPER_DST\" \"$VA_PLIST_DST\"\ncp -R \"$BUILT_PRODUCTS_DIR/VisualAlarmAgent.app\" \"$BUILT_PRODUCTS_DIR/VisualAlarmRunner.app\" \"$VA_HELPER_DST/\"\ncp \"$SRCROOT/Support/co.denis.VisualAlarm.agent.plist\" \"$VA_PLIST_DST/\"\n";
+			shellScript = "if [ \"$PLATFORM_NAME\" != \"macosx\" ]; then\n\texit 0\nfi\nset -euo pipefail\nmkdir -p \"$VA_HELPER_DST\" \"$VA_PLIST_DST\"\nrm -rf \"$VA_HELPER_DST/VisualAlarmAgent.app\" \"$VA_HELPER_DST/VisualAlarmRunner.app\"\ncp -R \"$BUILT_PRODUCTS_DIR/VisualAlarmAgent.app\" \"$BUILT_PRODUCTS_DIR/VisualAlarmRunner.app\" \"$VA_HELPER_DST/\"\ncp \"$SRCROOT/Support/co.denis.VisualAlarm.agent.plist\" \"$VA_PLIST_DST/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
