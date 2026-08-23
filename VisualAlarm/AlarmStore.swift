@@ -90,6 +90,21 @@ final class AlarmStore: ObservableObject {
         persist()
     }
 
+    func delete(atOffsets offsets: IndexSet) {
+        let ids = offsets
+            .compactMap { index -> UUID? in
+                alarms.indices.contains(index) ? alarms[index].id : nil
+            }
+        ids.forEach { delete(id: $0) }
+    }
+
+    /// Enables or disables the alarm with the given identifier.
+    func setEnabled(_ enabled: Bool, forID id: UUID) {
+        guard let index = alarms.firstIndex(where: { $0.id == id }) else { return }
+        alarms[index].isEnabled = enabled
+        persist()
+    }
+
     private func persist() {
         do {
             let data = try JSONEncoder().encode(alarms)
