@@ -83,8 +83,12 @@ final class AlarmCoordinator: NSObject, NSApplicationDelegate {
     }
 
     private func currentAlarmLabel() -> String {
-        let store = AlarmStore.shared
-        if let alarm = store.alarms.first(where: \.isEnabled) {
+        // The agent records exactly which alarm is ringing.
+        if let request = FireRequest.read(), !request.label.isEmpty {
+            return request.label
+        }
+        // Fallback (direct launches during development): first enabled alarm.
+        if let alarm = AlarmStore.shared.alarms.first(where: \.isEnabled) {
             return String(format: "%02d:%02d %@", alarm.hour, alarm.minute, alarm.label)
                 .trimmingCharacters(in: .whitespaces)
         }
