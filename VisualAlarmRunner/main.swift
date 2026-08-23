@@ -19,16 +19,21 @@ private let otherInstances = NSRunningApplication
     .filter { $0 != NSRunningApplication.current }
 
 if !otherInstances.isEmpty {
+    print("runner: another instance is already running — exiting")
     exit(0)
 }
 
 let app = NSApplication.shared
 app.setActivationPolicy(.accessory)
 
-Task { @MainActor in
-    let coordinator = AlarmCoordinator()
-    app.delegate = coordinator
-} // Note: app.run() will process this Task
+// Top-level code runs on the main thread before the run loop starts, so it is
+// safe (and required — applicationDidFinishLaunching fires inside app.run())
+// to install the delegate synchronously on the MainActor here. Deferring via
+// Task { @MainActor } misses the launch notification entirely.
+let coordinator = MainActor.assumeIsolated {
+    AlarmCoordinator()
+}
+app.delegate = coordinator
 
 if let seconds = smokeTestSeconds {
     Task { @MainActor in
@@ -53,6 +58,7 @@ final class AlarmCoordinator: NSObject, NSApplicationDelegate {
     private let flicker = FlickerEffectController(interval: .milliseconds(500))
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        print("runner: didFinishLaunching")
         let alarm = currentAlarmLabel()
         window = StopWindow(alarmLabel: alarm)
         window?.show()
@@ -75,13 +81,27 @@ final class AlarmCoordinator: NSObject, NSApplicationDelegate {
 
     private func startEffects() {
         sound = LoopingSound(named: "Funk")
+        let soundLoaded = sound?.isAvailable == true
+        print("runner: sound loaded=\(soundLoaded)")
         sound?.play()
 
         brightness.storeCurrentLevels()
+        print(
+            "runner: brightness supported=\(brightness.isSupported) "
+                + "displays=\(brightness.displayCount)"
+        )
         effectTask = flicker.start(
             clock: ContinuousClock(),
-            onPhase: { [brightness] in brightness.setAllDisplays(to: 1.0) },
-            offPhase: { [brightness] in brightness.setAllDisplays(to: 0.0) },
+            onPhase: { [brightness] in
+                if !brightness.setAllDisplays(to: 1.0) {
+                    print("runner: set max FAILED")
+                }
+            },
+            offPhase: { [brightness] in
+                if !brightness.setAllDisplays(to: 0.0) {
+                    print("runner: set min FAILED")
+                }
+            },
             restore: { [brightness] in brightness.restoreStoredLevels() }
         )
     }
@@ -174,6 +194,9 @@ final class StopWindow: NSObject, NSWindowDelegate {
 final class LoopingSound: NSObject, NSSoundDelegate {
     private let sound: NSSound?
     private var shouldLoop = true
+
+    /// Whether a system sound with the given name was found.
+    var isAvailable: Bool { sound != nil }
 
     init(named name: String) {
         sound = NSSound(named: name)
