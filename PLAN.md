@@ -101,9 +101,12 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
 - [x] `SMAppServiceRegistrar` (register/unregister/status mapping, deep link to
       Login Items settings when `.requiresApproval`) → "Add SMAppService
       registrar wrapper"; status-mapping unit tests (incl. `notFound`) → test commit
-- [ ] SwiftUI alarm list/editor ViewModels (CRUD → store, enable toggles,
-      weekday chips, Test-now button) → commit; ViewModel unit tests → test commit
-- [ ] macOS status banner for agent registration state → commit
+- [x] SwiftUI alarm list/editor ViewModels (CRUD → store, enable toggles,
+      weekday chips, Test-now button): `AlarmEditorModel` + tests, rewritten
+      ContentView (list/row/sheet/chips), store toggle+index-delete
+- [x] macOS status banner for agent registration state
+      (`AgentRegistrarModel` + `AgentStatusBanner`, Enable/Disable/Open
+      Settings actions)
 - [ ] GATE (manual): full flow through UI on Mac
 
 ## 7. iOS scheduling + effects
