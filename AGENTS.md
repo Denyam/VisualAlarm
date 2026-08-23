@@ -82,6 +82,11 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
   `MainActor.assumeIsolated { ... }` for synchronous MainActor setup.
 - The single-instance guard exits silently by design; it now prints a line so
   a stray background instance doesn't masquerade as "app does nothing".
+- Stop UI must be a plain `NSWindow`, not an `NSPanel`: panels default to
+  `hidesOnDeactivate = true` and never become key while an accessory app is
+  inactive, so the window stays invisible even after orderFront. Activate via
+  `NSApp.activate(ignoringOtherApps:)` only AFTER the run loop starts
+  (`DispatchQueue.main.async`) — earlier requests are dropped.
 
 ### Embedding mac helpers in a multiplatform target (step 3 findings)
 - A single multiplatform target cannot use CopyFiles phases for macOS-only
