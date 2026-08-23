@@ -81,9 +81,11 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
       edges via `Calendar.nextDate` + `.nextTime`) → "Add next fire date
       calculator"; 8 unit tests incl. spring-forward (skipped 02:30 → 03:00)
       and fall-back (first instance of repeated hour) → test commit
-- [ ] Scheduler loop — cancellable Task, `ContinuousClock`, ≤30 s chunks,
-      reload on Darwin change notification, wake catch-up grace window
-      → commit; unit tests with injected clock/fake now (no real sleeps) → test commit
+- [x] Scheduler loop — decision engine (`decide`) + `step(sleep:)` iteration:
+      ≤30 s capped chunks, catch-up cursor with 60 s grace window, disabled
+      alarms ignored, no double-fires ("Add alarm scheduler…"); deterministic
+      FakeClock tests (fire-late, stale-skip, chunked wait, store pickup)
+      → test commit
 - [ ] Agent entrypoint — wires store+scheduler, writes fire-request record,
       spawns runner via RunnerLauncher protocol → commit; spy-based tests → test commit
 - [ ] GATE (manual E2E): register agent via SMAppService on dev build, schedule
