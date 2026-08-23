@@ -77,8 +77,10 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
 
 ## 5. Agent (macOS)
 
-- [ ] `NextFireDateCalculator` pure functions (daily / weekday sets / DST edges)
-      → commit; exhaustive unit tests (fixed time zones) → test commit
+- [x] `NextFireDateCalculator` pure functions (daily / weekday sets / DST
+      edges via `Calendar.nextDate` + `.nextTime`) → "Add next fire date
+      calculator"; 8 unit tests incl. spring-forward (skipped 02:30 → 03:00)
+      and fall-back (first instance of repeated hour) → test commit
 - [ ] Scheduler loop — cancellable Task, `ContinuousClock`, ≤30 s chunks,
       reload on Darwin change notification, wake catch-up grace window
       → commit; unit tests with injected clock/fake now (no real sleeps) → test commit
