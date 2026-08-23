@@ -70,8 +70,10 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
       window label, loops system `NSSound("Funk")`, Stop window (no timeout),
       single-instance guard via `NSRunningApplication`, `VA_SMOKE_SECONDS`
       auto-stop hook for automated verification → "Add alarm runner app"
-- [ ] GATE (manual): launch runner directly — flicker + sound + Stop restores
-      original brightness
+- [x] GATE (manual): launch runner directly — flicker + sound + Stop restores
+      original brightness. Verified: flicker confirmed via mid-run IOKit reads
+      (1.0↔0.0), sound loops, centered stop window visible, Stop restores;
+      two bootstrap/embedding gotchas found & recorded in AGENTS.md
 
 ## 5. Agent (macOS)
 
