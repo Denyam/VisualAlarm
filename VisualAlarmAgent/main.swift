@@ -51,6 +51,7 @@ final class AgentCoordinator: NSObject, NSApplicationDelegate {
             onFire: { [launcher] alarm in
                 print("agent: firing '\(alarm.label)'")
                 launcher.launch(firingAlarm: alarm)
+                fflush(stdout)
             }
         )
         self.scheduler = scheduler
@@ -82,6 +83,9 @@ final class AgentCoordinator: NSObject, NSApplicationDelegate {
 
     private func resync(_ reason: String) {
         print("agent: resync (\(reason))")
+        // Pick up edits made by other processes before re-anchoring.
+        let count = store.load().count
+        print("agent: store now has \(count) alarm(s)")
         scheduler?.resync()
     }
 }
