@@ -88,6 +88,17 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
   `NSApp.activate(ignoringOtherApps:)` only AFTER the run loop starts
   (`DispatchQueue.main.async`) — earlier requests are dropped.
 
+### App Group naming under Sequoia+ privacy prompts (step 6)
+- A BARE (non-team-prefixed) App Group ID + no provisioning profile makes
+  macOS 15+ prompt "access data from other apps" on EVERY launch, and the
+  invisible prompt hangs xcodebuild test hosts ("test runner hung before
+  establishing connection"). Fix: prefix group with Team ID
+  (`ETFKU52LQ6.co.denis.VisualAlarm.shared`) — the system then provisions the
+  container silently for same-team apps. Keep this format for any new groups.
+- `AlarmStore` posts `.alarmsDidChange` on every successful persist; anything
+  mutating the store elsewhere must rely on the store methods (or post
+  manually) or resident agents go stale.
+
 ### Embedding mac helpers in a multiplatform target (step 3 findings)
 - A single multiplatform target cannot use CopyFiles phases for macOS-only
   helpers: on iOS builds `ValidateEmbeddedBinary` fails ("target is built for
