@@ -1,8 +1,3 @@
-/**
- * File: RunnerLauncherTests.swift
- * Created: 2026-08-23
- */
-
 import Foundation
 import Testing
 
@@ -27,13 +22,12 @@ struct RunnerLauncherTests {
         var openedURL: URL?
         let launcher = WorkspaceRunnerLauncher(
             groupDirectory: directory,
-            opener: { openedURL = $0; return true }
+            opener: { openedURL = $0 }
         )
 
         let alarm = Alarm(label: "Morning run", hour: 6, minute: 30)
-        let result = launcher.launch(firingAlarm: alarm)
+        launcher.launch(firingAlarm: alarm)
 
-        #expect(result == true)
         #expect(openedURL?.lastPathComponent == "VisualAlarmRunner.app")
 
         let request = FireRequest.read(directory: directory)
@@ -47,13 +41,12 @@ struct RunnerLauncherTests {
 
         let launcher = WorkspaceRunnerLauncher(
             groupDirectory: directory,
-            opener: { _ in false }
+            opener: { _ in } // simulate an open that never succeeds
         )
 
         let alarm = Alarm(label: "Backup", hour: 7, minute: 0)
-        let result = launcher.launch(firingAlarm: alarm)
+        launcher.launch(firingAlarm: alarm)
 
-        #expect(result == false)
         #expect(FireRequest.read(directory: directory)?.alarmID == alarm.id)
     }
 }
