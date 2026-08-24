@@ -8,7 +8,7 @@ import Foundation
 import OSLog
 
 enum AppGroup {
-    static let identifier = "co.denis.VisualAlarm.shared"
+    static let identifier = "ETFKU52LQ6.co.denis.VisualAlarm.shared"
     static let alarmsFilename = "alarms.json"
 
     static var containerURL: URL? {
@@ -35,6 +35,13 @@ enum AppGroup {
     }
 }
 
+/// Change-signal seam; lets tests silence cross-process notifications.
+protocol AlarmChangeSignaling {
+    func post(_ notification: DarwinNotification)
+}
+
+extension DarwinNotificationCenter: AlarmChangeSignaling {}
+
 /// Owns the alarm list and persists it as JSON inside a shared directory so
 /// that the app, agent, and runner processes observe the same state.
 final class AlarmStore: ObservableObject {
@@ -48,12 +55,20 @@ final class AlarmStore: ObservableObject {
     @Published private(set) var alarms: [Alarm] = []
 
     private let fileURL: URL
+    private let darwin: any AlarmChangeSignaling
 
-    /// - Parameter directory: Directory holding `alarms.json`.
-    ///   Defaults to the App Group container with an Application Support fallback.
-    init(directory: URL? = nil) {
+    /// - Parameters:
+    ///   - directory: Directory holding `alarms.json`.
+    ///     Defaults to the App Group container with an Application Support fallback.
+    ///   - darwin: Change-signal center; every successful mutation posts
+    ///     `.alarmsDidChange` so resident agents reload immediately.
+    init(
+        directory: URL? = nil,
+        darwin: any AlarmChangeSignaling = DarwinNotificationCenter.shared
+    ) {
         let resolved = directory ?? AppGroup.directory
         fileURL = resolved.appendingPathComponent(AppGroup.alarmsFilename)
+        self.darwin = darwin
         load()
     }
 
@@ -109,6 +124,8 @@ final class AlarmStore: ObservableObject {
         do {
             let data = try JSONEncoder().encode(alarms)
             try data.write(to: fileURL, options: .atomic)
+            // Tell resident agents (and other windows) to reload.
+            darwin.post(.alarmsDidChange)
         } catch {
             Self.logger.error("Persisting alarms failed: \(error.localizedDescription)")
         }
