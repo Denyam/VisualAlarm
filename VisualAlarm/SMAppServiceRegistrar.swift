@@ -49,6 +49,31 @@ final class SMAppServiceRegistrar: ObservableObject {
         .map(service.status)
     }
 
+    /// Queries the system off-main; safe to call from any executor.
+    nonisolated static func queryStatus(
+        plistName: String = SMAppServiceRegistrar.agentPlistName
+    ) -> RegistrationStatus {
+        .map(SMAppService.agent(plistName: plistName).status)
+    }
+
+    /// Performs registration off-main and reports the resulting state.
+    nonisolated static func performRegistration(
+        register: Bool,
+        plistName: String = SMAppServiceRegistrar.agentPlistName
+    ) async -> RegistrationStatus {
+        let service = SMAppService.agent(plistName: plistName)
+        do {
+            if register {
+                try await service.register()
+            } else {
+                try await service.unregister()
+            }
+        } catch {
+            NSLog("SMAppService \(register ? "register" : "unregister") failed: \(error.localizedDescription)")
+        }
+        return queryStatus(plistName: plistName)
+    }
+
     func register() throws {
         try service.register()
     }
