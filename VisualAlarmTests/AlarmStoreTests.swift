@@ -22,7 +22,7 @@ struct AlarmStoreTests {
 
     @Test func startsEmptyWhenNoFileExists() {
         let directory = (try? makeTemporaryDirectory())!
-        let store = AlarmStore(directory: directory)
+        let store = AlarmStore(directory: directory, darwin: SilentNotifier())
         #expect(store.alarms.isEmpty)
     }
 
@@ -30,16 +30,16 @@ struct AlarmStoreTests {
         let directory = try makeTemporaryDirectory()
         let alarm = Alarm(label: "Morning", hour: 6, minute: 45)
 
-        AlarmStore(directory: directory).upsert(alarm)
+        AlarmStore(directory: directory, darwin: SilentNotifier()).upsert(alarm)
 
-        let reloaded = AlarmStore(directory: directory)
+        let reloaded = AlarmStore(directory: directory, darwin: SilentNotifier())
         #expect(reloaded.alarms == [alarm])
     }
 
     @Test func upsertReplacesExistingIdentifier() throws {
         let directory = try makeTemporaryDirectory()
         let original = Alarm(label: "A", hour: 1, minute: 1)
-        let store = AlarmStore(directory: directory)
+        let store = AlarmStore(directory: directory, darwin: SilentNotifier())
         store.upsert(original)
 
         var renamed = original
@@ -53,19 +53,19 @@ struct AlarmStoreTests {
         let directory = try makeTemporaryDirectory()
         let first = Alarm(hour: 1, minute: 1)
         let second = Alarm(hour: 2, minute: 2)
-        let store = AlarmStore(directory: directory)
+        let store = AlarmStore(directory: directory, darwin: SilentNotifier())
         store.upsert(first)
         store.upsert(second)
 
         store.delete(id: first.id)
 
         #expect(store.alarms == [second])
-        #expect(AlarmStore(directory: directory).alarms == [second])
+        #expect(AlarmStore(directory: directory, darwin: SilentNotifier()).alarms == [second])
     }
 
     @Test func loadReflectsExternalFileChanges() throws {
         let directory = try makeTemporaryDirectory()
-        let store = AlarmStore(directory: directory)
+        let store = AlarmStore(directory: directory, darwin: SilentNotifier())
         let external = Alarm(label: "External", hour: 9, minute: 9)
         let data = try JSONEncoder().encode([external])
 
@@ -78,8 +78,12 @@ struct AlarmStoreTests {
         let directory = try makeTemporaryDirectory()
         try Data("not json".utf8).write(to: AlarmStore.fileURL(in: directory))
 
-        let store = AlarmStore(directory: directory)
+        let store = AlarmStore(directory: directory, darwin: SilentNotifier())
 
         #expect(store.alarms.isEmpty)
     }
+}
+
+private final class SilentNotifier: AlarmChangeSignaling {
+    func post(_ notification: DarwinNotification) {}
 }
