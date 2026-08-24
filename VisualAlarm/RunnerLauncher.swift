@@ -10,26 +10,36 @@ import Foundation
 /// Spawns the alarm window process for a due alarm and records what is
 /// firing so the runner can present specifics.
 protocol RunnerLaunching {
-    @discardableResult
-    func launch(firingAlarm alarm: Alarm) -> Bool
+    func launch(firingAlarm alarm: Alarm)
 }
 
 final class WorkspaceRunnerLauncher: RunnerLaunching {
     private let groupDirectory: URL?
-    private let opener: (URL) -> Bool
+    private let opener: (URL) -> Void
 
     /// - Parameters:
     ///   - groupDirectory: Overrides the App Group container (tests).
     ///   - opener: Performs the actual open (tests inject a spy).
     init(
         groupDirectory: URL? = nil,
-        opener: ((URL) -> Bool)? = nil
+        opener: ((URL) -> Void)? = nil
     ) {
         self.groupDirectory = groupDirectory
-        self.opener = opener ?? { NSWorkspace.shared.open($0) }
+        self.opener = opener ?? { url in
+            NSWorkspace.shared.openApplication(
+                at: url,
+                configuration: NSWorkspace.OpenConfiguration()
+            ) { _, error in
+                if let error {
+                    NSLog("agent: open failed — \(error)")
+                } else {
+                    NSLog("agent: opened runner")
+                }
+            }
+        }
     }
 
-    func launch(firingAlarm alarm: Alarm) -> Bool {
+    func launch(firingAlarm alarm: Alarm) {
         let request = FireRequest(
             alarmID: alarm.id,
             label: alarm.label,
@@ -44,7 +54,7 @@ final class WorkspaceRunnerLauncher: RunnerLaunching {
         let runnerURL = Bundle.main.bundleURL
             .deletingLastPathComponent()
             .appendingPathComponent("VisualAlarmRunner.app")
-        return opener(runnerURL)
+        opener(runnerURL)
     }
 }
 #endif
