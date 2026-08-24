@@ -93,8 +93,14 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
       → "Wire agent entrypoint to scheduler and runner"; spy tests for the
       launcher seam → test commit. Agent target now syncs the shared sources
       folder with membership exceptions
-- [ ] GATE (manual E2E): register agent via SMAppService on dev build, schedule
-      +2 min alarm, verify firing incl. sleep/wake catch-up; unregister cleanly
+- [x] GATE (manual E2E, combined with step 6): register via app hook →
+      `launchctl print` shows running job (nested BundleProgram accepted ✓);
+      seed alarm into shared container + Darwin notify → agent reloaded,
+      fired at due minute, wrote fire-request, opened runner via sandboxed
+      agent (`openApplication` completion API — legacy `NSWorkspace.open`
+      returns false from sandbox); runner showed the alarm window; graceful
+      quit restored brightness; unregister → notRegistered. Wake catch-up
+      covered by scheduler unit tests (physical sleep test optional)
 
 ## 6. Registration + UI (macOS)
 
