@@ -17,8 +17,25 @@ struct ContentView: View {
                 } else {
                     List {
                         ForEach(store.alarms) { alarm in
-                            AlarmRowView(alarm: alarm) { newValue in
-                                store.setEnabled(newValue, forID: alarm.id)
+                            AlarmRowView(
+                                alarm: alarm,
+                                setEnabled: { newValue in
+                                    store.setEnabled(newValue, forID: alarm.id)
+                                },
+                                onEdit: {
+                                    editorTarget = EditorTarget(alarm: alarm)
+                                }
+                            )
+                            .contextMenu {
+                                Button("Edit…") {
+                                    editorTarget = EditorTarget(alarm: alarm)
+                                }
+                                Divider()
+                                Button(
+                                    "Delete",
+                                    role: .destructive,
+                                    action: { store.delete(id: alarm.id) }
+                                )
                             }
                         }
                         .onDelete { store.delete(atOffsets: $0) }
@@ -114,6 +131,7 @@ struct AgentStatusBanner: View {
 struct AlarmRowView: View {
     let alarm: Alarm
     let setEnabled: (Bool) -> Void
+    let onEdit: () -> Void
 
     @State private var now = Date()
 
@@ -133,6 +151,8 @@ struct AlarmRowView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            .contentShape(Rectangle())
+            .onTapGesture(perform: onEdit)
 
             Spacer()
 
