@@ -55,8 +55,10 @@
 				Engine/BrightnessController.swift = (ios, );
 				Engine/HapticSignaling.swift = (ios, );
 				Engine/IOSAlarmScheduler.swift = (ios, );
+				Engine/NotificationDelegate.swift = (ios, );
 				Engine/NotificationScheduling.swift = (ios, );
 				Engine/TorchController.swift = (ios, );
+				View/AlarmFiringOverlay.swift = (ios, );
 			};
 			target = 3909CF7C302F709E00912A27 /* VisualAlarm */;
 		};
@@ -68,12 +70,14 @@
 				Engine/BrightnessController.swift,
 				Engine/HapticSignaling.swift,
 				Engine/IOSAlarmScheduler.swift,
+				Engine/NotificationDelegate.swift,
 				Engine/NotificationScheduling.swift,
 				Engine/TorchController.swift,
 				View/AgentRegistrarModel.swift,
 				View/AgentStatusBanner.swift,
 				View/AlarmEditorModel.swift,
 				View/AlarmEditorView.swift,
+				View/AlarmFiringOverlay.swift,
 				View/AlarmRowView.swift,
 				View/ContentView.swift,
 				View/NextFirePreview.swift,
@@ -93,12 +97,14 @@
 				Engine/IOSAlarmScheduler.swift,
 				Engine/MacBrightnessController.swift,
 				Engine/MacBrightnessControlling.swift,
+				Engine/NotificationDelegate.swift,
 				Engine/NotificationScheduling.swift,
 				Engine/TorchController.swift,
 				View/AgentRegistrarModel.swift,
 				View/AgentStatusBanner.swift,
 				View/AlarmEditorModel.swift,
 				View/AlarmEditorView.swift,
+				View/AlarmFiringOverlay.swift,
 				View/AlarmRowView.swift,
 				View/ContentView.swift,
 				View/NextFirePreview.swift,
