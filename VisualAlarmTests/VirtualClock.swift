@@ -1,12 +1,12 @@
-/**
- * File: VirtualClock.swift
- * Created: 2026-08-22
- */
-
 import Foundation
+import Testing
+
+@testable import VisualAlarm
 
 /// Deterministic `Clock` for tests: every sleep suspends until the test calls
 /// `tick()`, which resumes all pending sleeps and advances virtual time.
+/// `waitUntilSuspended()` parks until at least one sleep is pending, so ticks
+/// can never fire before the code under test reached its sleep.
 final class VirtualClock: Clock, @unchecked Sendable {
     typealias Instant = ContinuousClock.Instant
 
@@ -15,7 +15,8 @@ final class VirtualClock: Clock, @unchecked Sendable {
     private let lock = NSLock()
     private let base = ContinuousClock.now
     private var elapsed: Duration = .zero
-    private var waiters: [CheckedContinuation<Void, Error>] = []
+    private var sleepWaiters: [CheckedContinuation<Void, Error>] = []
+    private var suspensionWaiters: [CheckedContinuation<Void, Never>] = []
 
     var now: ContinuousClock.Instant {
         lock.lock()
@@ -29,8 +30,11 @@ final class VirtualClock: Clock, @unchecked Sendable {
     ) async throws {
         try await withCheckedThrowingContinuation { continuation in
             lock.lock()
-            waiters.append(continuation)
+            sleepWaiters.append(continuation)
+            let parked = suspensionWaiters
+            suspensionWaiters.removeAll()
             lock.unlock()
+            parked.forEach { $0.resume(returning: ()) }
         }
     }
 
@@ -38,9 +42,23 @@ final class VirtualClock: Clock, @unchecked Sendable {
     func tick() {
         lock.lock()
         elapsed += .seconds(1)
-        let pending = waiters
-        waiters.removeAll()
+        let pending = sleepWaiters
+        sleepWaiters.removeAll()
         lock.unlock()
         pending.forEach { $0.resume(returning: ()) }
+    }
+
+    /// Returns once at least one sleep is pending (or immediately if one
+    /// already is).
+    func waitUntilSuspended() async {
+        lock.lock()
+        if !sleepWaiters.isEmpty {
+            lock.unlock()
+            return
+        }
+        await withCheckedContinuation { continuation in
+            suspensionWaiters.append(continuation)
+            lock.unlock()
+        }
     }
 }

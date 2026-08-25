@@ -20,11 +20,14 @@ struct FlickerEffectControllerTests {
         defer { task.cancel() }
 
         try await waitFor(counter.on == 1 && counter.off == 0)
+        await clock.waitUntilSuspended()
 
         clock.tick()
+        await clock.waitUntilSuspended()
         try await waitFor(counter.off == 1 && counter.on == 1)
 
         clock.tick()
+        await clock.waitUntilSuspended()
         try await waitFor(counter.on == 2 && counter.off == 1)
 
         #expect(counter.restore == 0)
@@ -42,6 +45,7 @@ struct FlickerEffectControllerTests {
         )
 
         try await waitFor(counter.on == 1)
+        await clock.waitUntilSuspended()
 
         task.cancel()
         clock.tick()
