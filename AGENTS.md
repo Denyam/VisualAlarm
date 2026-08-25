@@ -113,3 +113,22 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
   BSD `cp -R` merges INTO an existing directory, silently leaving stale
   binaries embedded. Phase also sets `alwaysOutOfDate = 1` so incremental
   builds can never skip re-embedding.
+
+### iOS notification scheduling + effects (step 7)
+- `@Sendable` closures cannot mutate captured protocol existentials in Swift 5:
+  a capture-list binding `[brightness]` of `any ScreenBrightnessControlling`
+  creates an immutable local, and even `[self]` is immutable in `@Sendable`
+  context on `@MainActor` classes. Workaround: wrap mutable state in a simple
+  `final class` box (`BrightnessBox`) and capture the box reference.
+- `UNUserNotificationCenter` has no async `getPendingNotificationRequests`
+  wrapper — use `withCheckedContinuation` around the completion-handler
+  version. The `add(_:)` method collides with an identically-named extension
+  method; rename the protocol wrapper to `schedule(_:)`.
+- `UINotificationFeedbackGenerator.FeedbackType` has `.success`, `.warning`,
+  `.error` — NOT `.alert`.
+- iOS-only test files that reference mac-only types (e.g.
+  `WorkspaceRunnerLauncher`) MUST be wrapped in `#if os(macOS)` to compile on
+  the iOS simulator test host.
+- Test files referencing `Alarm` with non-default `id` must place the `id:`
+  argument before `hour:` — Swift enforces parameter order even with labeled
+  defaults.
