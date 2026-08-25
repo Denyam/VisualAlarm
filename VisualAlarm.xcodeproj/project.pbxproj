@@ -51,7 +51,12 @@
 		3909CFAB30320C4100912A27 /* Exceptions for "VisualAlarm" folder in "VisualAlarm" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			platformFiltersByRelativePath = {
-				"Engine/BrightnessController.swift" = (ios, );
+				Engine/AlarmEffectCoordinator.swift = (ios, );
+				Engine/BrightnessController.swift = (ios, );
+				Engine/HapticSignaling.swift = (ios, );
+				Engine/IOSAlarmScheduler.swift = (ios, );
+				Engine/NotificationScheduling.swift = (ios, );
+				Engine/TorchController.swift = (ios, );
 			};
 			target = 3909CF7C302F709E00912A27 /* VisualAlarm */;
 		};
@@ -59,15 +64,20 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Assets.xcassets,
-				"Engine/BrightnessController.swift",
-				"View/AgentRegistrarModel.swift",
-				"View/AgentStatusBanner.swift",
-				"View/AlarmEditorModel.swift",
-				"View/AlarmEditorView.swift",
-				"View/AlarmRowView.swift",
-				"View/ContentView.swift",
-				"View/NextFirePreview.swift",
-				"View/WeekdayChips.swift",
+				Engine/AlarmEffectCoordinator.swift,
+				Engine/BrightnessController.swift,
+				Engine/HapticSignaling.swift,
+				Engine/IOSAlarmScheduler.swift,
+				Engine/NotificationScheduling.swift,
+				Engine/TorchController.swift,
+				View/AgentRegistrarModel.swift,
+				View/AgentStatusBanner.swift,
+				View/AlarmEditorModel.swift,
+				View/AlarmEditorView.swift,
+				View/AlarmRowView.swift,
+				View/ContentView.swift,
+				View/NextFirePreview.swift,
+				View/WeekdayChips.swift,
 				VisualAlarmApp.swift,
 			);
 			target = C0DE000000000000000000B3 /* VisualAlarmRunner */;
@@ -76,19 +86,23 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Assets.xcassets,
-				"Engine/BrightnessController.swift",
-				"Engine/FlickerEffectController.swift",
-				"Engine/MacBrightnessController.swift",
-				"Engine/MacBrightnessControlling.swift",
-				"Engine/TorchController.swift",
-				"View/AgentRegistrarModel.swift",
-				"View/AgentStatusBanner.swift",
-				"View/AlarmEditorModel.swift",
-				"View/AlarmEditorView.swift",
-				"View/AlarmRowView.swift",
-				"View/ContentView.swift",
-				"View/NextFirePreview.swift",
-				"View/WeekdayChips.swift",
+				Engine/AlarmEffectCoordinator.swift,
+				Engine/BrightnessController.swift,
+				Engine/FlickerEffectController.swift,
+				Engine/HapticSignaling.swift,
+				Engine/IOSAlarmScheduler.swift,
+				Engine/MacBrightnessController.swift,
+				Engine/MacBrightnessControlling.swift,
+				Engine/NotificationScheduling.swift,
+				Engine/TorchController.swift,
+				View/AgentRegistrarModel.swift,
+				View/AgentStatusBanner.swift,
+				View/AlarmEditorModel.swift,
+				View/AlarmEditorView.swift,
+				View/AlarmRowView.swift,
+				View/ContentView.swift,
+				View/NextFirePreview.swift,
+				View/WeekdayChips.swift,
 				VisualAlarmApp.swift,
 			);
 			target = C0DE000000000000000000A3 /* VisualAlarmAgent */;
@@ -100,8 +114,8 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				3909CFAB30320C4100912A27 /* Exceptions for "VisualAlarm" folder in "VisualAlarm" target */,
-				C0DE000000000000000000E1 /* Exceptions for "VisualAlarm" folder in "VisualAlarmRunner" target */,
 				C0DE000000000000000000E2 /* Exceptions for "VisualAlarm" folder in "VisualAlarmAgent" target */,
+				C0DE000000000000000000E1 /* Exceptions for "VisualAlarm" folder in "VisualAlarmRunner" target */,
 			);
 			path = VisualAlarm;
 			sourceTree = "<group>";
@@ -280,8 +294,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				C0DE000000000000000000A1 /* VisualAlarmAgent */,
 				3909CF7F302F709E00912A27 /* VisualAlarm */,
+				C0DE000000000000000000A1 /* VisualAlarmAgent */,
 			);
 			name = VisualAlarmAgent;
 			packageProductDependencies = (
@@ -303,8 +317,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				C0DE000000000000000000B1 /* VisualAlarmRunner */,
 				3909CF7F302F709E00912A27 /* VisualAlarm */,
+				C0DE000000000000000000B1 /* VisualAlarmRunner */,
 			);
 			name = VisualAlarmRunner;
 			packageProductDependencies = (
