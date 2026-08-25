@@ -1,8 +1,13 @@
 import SwiftUI
+import UserNotifications
 
 struct ContentView: View {
     @ObservedObject private var store = AlarmStore.shared
     @State private var editorTarget: EditorTarget?
+    #if os(iOS)
+    @StateObject private var coordinator = AlarmEffectCoordinator()
+    private let scheduler = IOSAlarmScheduler()
+    #endif
 
     var body: some View {
         NavigationStack {
@@ -63,8 +68,35 @@ struct ContentView: View {
                     }
                 )
             }
+            #if os(iOS)
+            .overlay {
+                if let alarm = coordinator.firingAlarm {
+                    AlarmFiringOverlay(
+                        label: alarm.label,
+                        onStop: { coordinator.stop() }
+                    )
+                }
+            }
+            .task {
+                await requestNotificationPermission()
+                await scheduler.sync(alarms: store.alarms)
+                NotificationDelegate.shared.coordinator = coordinator
+                NotificationDelegate.shared.alarmLookup = { [store] in store.alarms }
+                UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
+            }
+            .onChange(of: store.alarms) { _, newAlarms in
+                Task { await scheduler.sync(alarms: newAlarms) }
+            }
+            #endif
         }
     }
+
+    #if os(iOS)
+    private func requestNotificationPermission() async {
+        let center = UNUserNotificationCenter.current()
+        _ = await center.requestAuthorizationIfNeeded()
+    }
+    #endif
 
     private struct EditorTarget: Identifiable {
         let id = UUID()
