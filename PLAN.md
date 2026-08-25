@@ -117,13 +117,13 @@ file to `docs/archive/`, remove `"instructions": ["PLAN.md"]` from
 
 ## 7. iOS scheduling + effects
 
-- [ ] `IOSAlarmScheduler` behind protocol — per-weekday/daily repeating
+- [x] `IOSAlarmScheduler` behind protocol — per-weekday/daily repeating
       UNCalendarNotificationTrigger requests, stable identifiers → commit;
       unit tests against mocked notification center → test commit
-- [ ] Foreground effect runner — brightness flicker + torch blink (protocol-seam
+- [x] Foreground effect runner — brightness flicker + torch blink (protocol-seam
       TorchController) + haptics; willPresent/tap wiring → commit; loop unit
       tests with mocks → test commit
-- [ ] Permission request flow → commit
+- [x] Permission request flow → commit
 - [ ] GATE (device checklist): permission prompt, foreground fire = full effect,
       background tap flow opens app + effect, torch blinks on device
 
