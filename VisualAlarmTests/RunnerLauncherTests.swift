@@ -1,3 +1,4 @@
+#if os(macOS)
 import Foundation
 import Testing
 
@@ -50,3 +51,4 @@ struct RunnerLauncherTests {
         #expect(FireRequest.read(directory: directory)?.alarmID == alarm.id)
     }
 }
+#endif
