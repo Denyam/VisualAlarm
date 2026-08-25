@@ -51,7 +51,7 @@
 		3909CFAB30320C4100912A27 /* Exceptions for "VisualAlarm" folder in "VisualAlarm" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			platformFiltersByRelativePath = {
-				BrightnessController.swift = (ios, );
+				"Engine/BrightnessController.swift" = (ios, );
 			};
 			target = 3909CF7C302F709E00912A27 /* VisualAlarm */;
 		};
@@ -59,8 +59,15 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Assets.xcassets,
-				BrightnessController.swift,
-				ContentView.swift,
+				"Engine/BrightnessController.swift",
+				"View/AgentRegistrarModel.swift",
+				"View/AgentStatusBanner.swift",
+				"View/AlarmEditorModel.swift",
+				"View/AlarmEditorView.swift",
+				"View/AlarmRowView.swift",
+				"View/ContentView.swift",
+				"View/NextFirePreview.swift",
+				"View/WeekdayChips.swift",
 				VisualAlarmApp.swift,
 			);
 			target = C0DE000000000000000000B3 /* VisualAlarmRunner */;
@@ -69,12 +76,19 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Assets.xcassets,
-				BrightnessController.swift,
-				ContentView.swift,
-				FlickerEffectController.swift,
-				MacBrightnessControlling.swift,
-				MacBrightnessController.swift,
-				TorchController.swift,
+				"Engine/BrightnessController.swift",
+				"Engine/FlickerEffectController.swift",
+				"Engine/MacBrightnessController.swift",
+				"Engine/MacBrightnessControlling.swift",
+				"Engine/TorchController.swift",
+				"View/AgentRegistrarModel.swift",
+				"View/AgentStatusBanner.swift",
+				"View/AlarmEditorModel.swift",
+				"View/AlarmEditorView.swift",
+				"View/AlarmRowView.swift",
+				"View/ContentView.swift",
+				"View/NextFirePreview.swift",
+				"View/WeekdayChips.swift",
 				VisualAlarmApp.swift,
 			);
 			target = C0DE000000000000000000A3 /* VisualAlarmAgent */;

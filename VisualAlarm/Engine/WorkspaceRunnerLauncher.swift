@@ -7,12 +7,6 @@
 import AppKit
 import Foundation
 
-/// Spawns the alarm window process for a due alarm and records what is
-/// firing so the runner can present specifics.
-protocol RunnerLaunching {
-    func launch(firingAlarm alarm: Alarm)
-}
-
 final class WorkspaceRunnerLauncher: RunnerLaunching {
     private let groupDirectory: URL?
     private let opener: (URL) -> Void
