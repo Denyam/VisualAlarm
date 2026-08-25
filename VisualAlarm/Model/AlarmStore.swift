@@ -7,41 +7,6 @@ import Combine
 import Foundation
 import OSLog
 
-enum AppGroup {
-    static let identifier = "ETFKU52LQ6.co.denis.VisualAlarm.shared"
-    static let alarmsFilename = "alarms.json"
-
-    static var containerURL: URL? {
-        FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: identifier
-        )
-    }
-
-    /// Directory shared by app, agent, and runner; falls back to Application
-    /// Support when no container is available (unsandboxed tools, tests).
-    static var directory: URL {
-        if let container = containerURL {
-            return container
-        }
-        let fallback = FileManager.default.urls(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask
-        )[0].appendingPathComponent("VisualAlarm", isDirectory: true)
-        try? FileManager.default.createDirectory(
-            at: fallback,
-            withIntermediateDirectories: true
-        )
-        return fallback
-    }
-}
-
-/// Change-signal seam; lets tests silence cross-process notifications.
-protocol AlarmChangeSignaling {
-    func post(_ notification: DarwinNotification)
-}
-
-extension DarwinNotificationCenter: AlarmChangeSignaling {}
-
 /// Owns the alarm list and persists it as JSON inside a shared directory so
 /// that the app, agent, and runner processes observe the same state.
 final class AlarmStore: ObservableObject {
