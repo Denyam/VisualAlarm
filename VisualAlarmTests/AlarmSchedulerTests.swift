@@ -50,7 +50,7 @@ struct AlarmSchedulerTests {
         defer { try? FileManager.default.removeItem(at: directory.url) }
 
         let dueAt = epoch.addingTimeInterval(10) // within 60 s grace at start
-        let store = AlarmStore(directory: directory.url)
+        let store = AlarmStore(directory: directory.url, darwin: SilentNotifier())
         store.upsert(Alarm(label: "soon", hour: hour(of: dueAt), minute: minute(of: dueAt)))
 
         let clock = FakeClock(start: epoch)
@@ -76,7 +76,7 @@ struct AlarmSchedulerTests {
 
         // Alarm was due an hour before the scheduler starts.
         let staleTime = epoch.addingTimeInterval(-3_600)
-        let store = AlarmStore(directory: directory.url)
+        let store = AlarmStore(directory: directory.url, darwin: SilentNotifier())
         store.upsert(Alarm(label: "stale", hour: hour(of: staleTime), minute: minute(of: staleTime)))
 
         let clock = FakeClock(start: epoch)
@@ -105,7 +105,7 @@ struct AlarmSchedulerTests {
 
         // One full minute out (alarms have minute granularity).
         let dueAt = epoch.addingTimeInterval(60)
-        let store = AlarmStore(directory: directory.url)
+        let store = AlarmStore(directory: directory.url, darwin: SilentNotifier())
         store.upsert(Alarm(label: "later", hour: hour(of: dueAt), minute: minute(of: dueAt)))
 
         let clock = FakeClock(start: epoch)
@@ -134,7 +134,7 @@ struct AlarmSchedulerTests {
         let directory = try TemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory.url) }
 
-        let store = AlarmStore(directory: directory.url)
+        let store = AlarmStore(directory: directory.url, darwin: SilentNotifier())
         let clock = FakeClock(start: epoch)
         let fired = FiredBox()
         let scheduler = AlarmScheduler(
@@ -160,7 +160,7 @@ struct AlarmSchedulerTests {
         let directory = try TemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory.url) }
 
-        let store = AlarmStore(directory: directory.url)
+        let store = AlarmStore(directory: directory.url, darwin: SilentNotifier())
         store.upsert(Alarm(hour: 12, minute: 0, isEnabled: false))
 
         let clock = FakeClock(start: epoch)
@@ -229,4 +229,8 @@ private final class SleepRecorder: @unchecked Sendable {
         durations.append(Double(duration.components.seconds))
         lock.unlock()
     }
+}
+
+private final class SilentNotifier: AlarmChangeSignaling {
+    func post(_ notification: DarwinNotification) {}
 }
