@@ -6,9 +6,10 @@
 import Foundation
 
 /// Identifies the shared App Group container used by the app, agent, and
-/// runner processes. The identifier must stay team-prefixed (see AGENTS.md).
+/// runner processes. The identifier must stay team-prefixed AND begin with
+/// "group." (required by provisioning for real-device builds; see AGENTS.md).
 enum AppGroup {
-    static let identifier = "ETFKU52LQ6.co.denis.VisualAlarm.shared"
+    static let identifier = "group.ETFKU52LQ6.co.denis.VisualAlarm.shared"
     static let alarmsFilename = "alarms.json"
 
     static var containerURL: URL? {
