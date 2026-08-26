@@ -6,7 +6,7 @@
 	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>ETFKU52LQ6.co.denis.VisualAlarm.shared</string>
+		<string>group.ETFKU52LQ6.co.denis.VisualAlarm.shared</string>
 	</array>
 </dict>
 </plist>
