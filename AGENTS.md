@@ -31,8 +31,9 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
 - `Contents/Library/LoginItems/VisualAlarmRunner.app` — LSUIElement alarm
   window: system-sound loop, brightness flicker, Stop button (rings until
   stopped), single-instance guard.
-- IPC: App Group container `co.denis.VisualAlarm.shared` holds `alarms.json`;
-  change/fire signaling via Darwin notifications. No launch arguments.
+- IPC: App Group container `group.ETFKU52LQ6.co.denis.VisualAlarm.shared`
+  holds `alarms.json`; change/fire signaling via Darwin notifications. No
+  launch arguments.
 
 ## Conventions
 
@@ -88,13 +89,20 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
   `NSApp.activate(ignoringOtherApps:)` only AFTER the run loop starts
   (`DispatchQueue.main.async`) — earlier requests are dropped.
 
-### App Group naming under Sequoia+ privacy prompts (step 6)
+### App Group naming (step 6 + device-build fix)
 - A BARE (non-team-prefixed) App Group ID + no provisioning profile makes
   macOS 15+ prompt "access data from other apps" on EVERY launch, and the
   invisible prompt hangs xcodebuild test hosts ("test runner hung before
-  establishing connection"). Fix: prefix group with Team ID
-  (`ETFKU52LQ6.co.denis.VisualAlarm.shared`) — the system then provisions the
-  container silently for same-team apps. Keep this format for any new groups.
+  establishing connection"). Fix: prefix group with Team ID.
+- Team-prefix alone is NOT enough for real-device iOS builds: provisioning
+  requires the identifier to BEGIN WITH `group.`. Final working format:
+  `group.<TEAMID>.<reverse-dns>` → `group.ETFKU52LQ6.co.denis.VisualAlarm.shared`.
+  The same string works on macOS (silent provisioning for same-team apps)
+  and iOS device/simulator; keep it for any new groups.
+- Test targets must carry the app's `DEVELOPMENT_TEAM` and matching
+  deployment targets, or device test runs fail to install.
+- Renaming the group orphans the previous container (`~/Library/Group
+  Containers/<old-id>`) — alarms.json does not migrate automatically.
 - `AlarmStore` posts `.alarmsDidChange` on every successful persist; anything
   mutating the store elsewhere must rely on the store methods (or post
   manually) or resident agents go stale.
