@@ -4,6 +4,7 @@ on:
 
 jobs:
   review:
+    runs-on: xcode-27
     permissions:
       id-token: write
       contents: read
