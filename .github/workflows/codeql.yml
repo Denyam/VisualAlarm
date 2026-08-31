@@ -85,8 +85,16 @@ jobs:
     - name: Run manual build steps
       if: matrix.build-mode == 'manual'
       shell: bash
+      env:
+		DEV_CERT = ${{ secrets.DEV_CERT }}
+		CERT_PASSWORD = ${{ secrets.CERT_PASSWORD }} 
       run: |
-        xcodebuild -allowProvisioningUpdates
+		echo $DEV_CERT | base64 —decode > certificate.p12
+        security create-keychain -p "<your-password>" build.keychain security default-keychain -s build.keychain
+        security unlock-keychain -p "<your-password>" build.keychain
+        security import certificate.p12 -k build.keychain -P "$CERT_PASSWORD" -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "<your-password>" build.keychain
+        xcodebuild -allowProvisioningUpdates CODE_SIGN_IDENTITY="Apple Development: astrocaesar@yahoo.com (VRQK9RB5TK)"
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
