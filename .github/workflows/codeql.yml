@@ -89,7 +89,7 @@ jobs:
         DEV_CERT: ${{ secrets.DEV_CERT }}
         CERT_PASSWORD: ${{ secrets.CERT_PASSWORD }} 
       run: |
-        echo $DEV_CERT | base64 —d -o certificate.p12
+        echo $DEV_CERT | base64 —d -i certificate.p12
         security create-keychain -p "<your-password>" build.keychain security default-keychain -s build.keychain
         security unlock-keychain -p "<your-password>" build.keychain
         security import certificate.p12 -k build.keychain -P "$CERT_PASSWORD" -T /usr/bin/codesign
