@@ -95,6 +95,7 @@ jobs:
         security unlock-keychain -p "<your-password>" build.keychain
         security import certificate.p12 -k build.keychain -P "$CERT_PASSWORD" -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "<your-password>" build.keychain
+        security set-keychain-settings -lut 21600 build.keychain
         xcodebuild -allowProvisioningUpdates
 
     - name: Perform CodeQL Analysis
