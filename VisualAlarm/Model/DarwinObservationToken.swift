@@ -12,6 +12,10 @@ final class DarwinObservationToken {
     let queue: DispatchQueue
     let block: () -> Void
 
+    private lazy var observerPointer: UnsafeMutableRawPointer = {
+        Unmanaged.passUnretained(self).toOpaque()
+    }()
+
     init(
         center: CFNotificationCenter,
         name: CFNotificationName,
@@ -24,10 +28,8 @@ final class DarwinObservationToken {
         self.block = block
     }
 
-    // Stored once during registration, reused for removal.
-    // Created by theDarwinNotificationCenter when adding the observer.
     var rawObserverPointer: UnsafeMutableRawPointer {
-        UnsafeMutableRawPointer(Unmanaged.passRetained(self).toOpaque())
+        observerPointer
     }
 
     func cancel() {
