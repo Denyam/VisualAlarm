@@ -24,6 +24,12 @@ final class DarwinObservationToken {
         self.block = block
     }
 
+    // Stored once during registration, reused for removal.
+    // Created by theDarwinNotificationCenter when adding the observer.
+    var rawObserverPointer: UnsafeMutableRawPointer {
+        UnsafeMutableRawPointer(Unmanaged.passRetained(self).toOpaque())
+    }
+
     func cancel() {
         CFNotificationCenterRemoveObserver(
             center,
@@ -31,15 +37,10 @@ final class DarwinObservationToken {
             name,
             nil
         )
-        Unmanaged<DarwinObservationToken>.fromOpaque(rawObserverPointer).release()
     }
 
     deinit {
         cancel()
-    }
-
-    var rawObserverPointer: UnsafeMutableRawPointer {
-        UnsafeMutableRawPointer(Unmanaged.passRetained(self).toOpaque())
     }
 
     func deliver() {
