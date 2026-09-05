@@ -33,6 +33,7 @@ final class AlarmScheduler: @unchecked Sendable {
     /// Only instants strictly after this cursor are considered; it advances
     /// past every consumed target so nothing fires twice.
     private var catchupCursor: Date
+    private let schedulerLock = NSLock()
 
     init(
         alarms: @escaping @Sendable () -> [Alarm],
@@ -55,6 +56,7 @@ final class AlarmScheduler: @unchecked Sendable {
     /// The earliest upcoming instant across all enabled alarms, considering
     /// the grace window. Internal for tests.
     func decide(currentTime: Date) -> Decision {
+        schedulerLock.lock()
         let candidates = alarmsProvider()
             .filter(\.isEnabled)
             .compactMap { alarm -> (Alarm, Date)? in
@@ -68,11 +70,13 @@ final class AlarmScheduler: @unchecked Sendable {
 
         while true {
             guard let (alarm, target) = candidates.first else {
+                schedulerLock.unlock()
                 return .waitUntil(currentTime.addingTimeInterval(maxChunk))
             }
 
             if target <= currentTime {
                 if currentTime.timeIntervalSince(target) <= graceWindow {
+                    schedulerLock.unlock()
                     return .fire(alarm: alarm, target: target)
                 }
                 // Stale beyond grace: skip it and look again immediately.
@@ -80,6 +84,7 @@ final class AlarmScheduler: @unchecked Sendable {
                 continue
             }
 
+            schedulerLock.unlock()
             return .waitUntil(target)
         }
     }
