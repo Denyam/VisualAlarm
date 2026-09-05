@@ -9,6 +9,7 @@ import OSLog
 
 /// Owns the alarm list and persists it as JSON inside a shared directory so
 /// that the app, agent, and runner processes observe the same state.
+@MainActor
 final class AlarmStore: ObservableObject {
     static let shared = AlarmStore()
 

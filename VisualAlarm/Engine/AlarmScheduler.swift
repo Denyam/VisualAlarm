@@ -66,20 +66,22 @@ final class AlarmScheduler: @unchecked Sendable {
             }
             .sorted { $0.1 < $1.1 }
 
-        guard let (alarm, target) = candidates.first else {
-            return .waitUntil(currentTime.addingTimeInterval(maxChunk))
-        }
-
-        if target <= currentTime {
-            if currentTime.timeIntervalSince(target) <= graceWindow {
-                return .fire(alarm: alarm, target: target)
+        while true {
+            guard let (alarm, target) = candidates.first else {
+                return .waitUntil(currentTime.addingTimeInterval(maxChunk))
             }
-            // Stale beyond grace: skip it and look again immediately.
-            catchupCursor = target.addingTimeInterval(1)
-            return decide(currentTime: currentTime)
-        }
 
-        return .waitUntil(target)
+            if target <= currentTime {
+                if currentTime.timeIntervalSince(target) <= graceWindow {
+                    return .fire(alarm: alarm, target: target)
+                }
+                // Stale beyond grace: skip it and look again immediately.
+                catchupCursor = target.addingTimeInterval(1)
+                continue
+            }
+
+            return .waitUntil(target)
+        }
     }
 
     /// One loop iteration: evaluate, fire what is due or sleep toward the

@@ -12,6 +12,8 @@ struct AlarmFiringOverlay: View {
     let label: String
     let onStop: () -> Void
 
+    @State private var appeared = false
+
     var body: some View {
         ZStack {
             Color.black.opacity(0.85)
@@ -36,7 +38,7 @@ struct AlarmFiringOverlay: View {
             }
         }
         .transition(.opacity)
-        .animation(.easeInOut, value: true)
+        .animation(.easeInOut, value: appeared)
     }
 }
 #endif

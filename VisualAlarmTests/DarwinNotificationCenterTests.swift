@@ -8,6 +8,7 @@ import Testing
 
 @testable import VisualAlarm
 
+@MainActor
 @Suite(.serialized)
 struct DarwinNotificationCenterTests {
 

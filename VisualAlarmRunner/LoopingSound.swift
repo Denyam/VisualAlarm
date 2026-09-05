@@ -31,7 +31,9 @@ final class LoopingSound: NSObject, NSSoundDelegate {
     }
 
     func sound(_ sound: NSSound, didFinishPlaying finished: Bool) {
-        guard shouldLoop else { return }
-        _ = sound.play()
+        DispatchQueue.main.async { [weak self] in
+            guard let self, self.shouldLoop else { return }
+            _ = sound.play()
+        }
     }
 }

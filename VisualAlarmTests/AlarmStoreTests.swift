@@ -8,6 +8,7 @@ import Testing
 
 @testable import VisualAlarm
 
+@MainActor
 struct AlarmStoreTests {
 
     private func makeTemporaryDirectory() throws -> URL {
