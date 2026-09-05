@@ -31,6 +31,7 @@ final class DarwinObservationToken {
             name,
             nil
         )
+        Unmanaged<DarwinObservationToken>.fromOpaque(rawObserverPointer).release()
     }
 
     deinit {
@@ -38,7 +39,7 @@ final class DarwinObservationToken {
     }
 
     var rawObserverPointer: UnsafeMutableRawPointer {
-        UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
+        UnsafeMutableRawPointer(Unmanaged.passRetained(self).toOpaque())
     }
 
     func deliver() {

@@ -9,7 +9,7 @@ import Foundation
 /// Replays a system sound indefinitely until stopped.
 final class LoopingSound: NSObject, NSSoundDelegate {
     private let sound: NSSound?
-    private var shouldLoop = true
+    @MainActor private var shouldLoop = true
 
     /// Whether a system sound with the given name was found.
     var isAvailable: Bool { sound != nil }
@@ -31,9 +31,7 @@ final class LoopingSound: NSObject, NSSoundDelegate {
     }
 
     func sound(_ sound: NSSound, didFinishPlaying finished: Bool) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self, self.shouldLoop else { return }
-            _ = sound.play()
-        }
+        guard self.shouldLoop else { return }
+        _ = sound.play()
     }
 }
