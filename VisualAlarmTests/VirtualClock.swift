@@ -28,13 +28,13 @@ final class VirtualClock: Clock, @unchecked Sendable {
         until deadline: ContinuousClock.Instant,
         tolerance: Duration?
     ) async throws {
-        // If the deadline has already passed, return immediately (matches real clock behaviour).
-        let currentElapsed = lock.lock(); defer { lock.unlock() }
-        if deadline <= base.advanced(by: elapsed) {
-            return
-        }
         try await withCheckedThrowingContinuation { continuation in
             lock.lock()
+            if deadline <= base.advanced(by: elapsed) {
+                lock.unlock()
+                continuation.resume(returning: ())
+                return
+            }
             sleepWaiters.append(continuation)
             let parked = suspensionWaiters
             suspensionWaiters.removeAll()
