@@ -8,6 +8,7 @@ import Testing
 
 @testable import VisualAlarm
 
+@MainActor
 struct AlarmSchedulerTests {
 
     /// Mutable wall clock shared between the test and the scheduler.
