@@ -1,6 +1,11 @@
 import AVFoundation
 
-class TorchController {
+/// Seam for torch control; lets effect coordination be unit-tested.
+protocol TorchControlling {
+    func setTorch(on: Bool) -> Bool
+}
+
+class TorchController: TorchControlling {
     private let device = AVCaptureDevice.default(for: .video)
 
     /// Turns the torch on or off.
@@ -9,19 +14,19 @@ class TorchController {
         guard let device = device, device.hasTorch else { return false }
         do {
             try device.lockForConfiguration()
-            
+
             defer { device.unlockForConfiguration() }
-            
+
             if on && device.isTorchModeSupported(.on) {
                 try device.setTorchModeOn(level: AVCaptureDevice.maxAvailableTorchLevel)
             } else {
                 device.torchMode = .off
             }
-            
+
             return true
         } catch {
             print("TorchController: Unable to set torch: \(error)")
-            
+
             return false
         }
     }
