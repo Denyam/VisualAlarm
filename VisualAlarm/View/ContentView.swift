@@ -4,6 +4,7 @@ import UserNotifications
 struct ContentView: View {
     @ObservedObject private var store = AlarmStore.shared
     @State private var editorTarget: EditorTarget?
+    @State private var hasAppeared = false
     #if os(iOS)
     @StateObject private var coordinator = AlarmEffectCoordinator()
     private let scheduler = IOSAlarmScheduler()
@@ -68,7 +69,7 @@ struct ContentView: View {
                     }
                 )
             }
-            #if os(iOS)
+#if os(iOS)
             .overlay {
                 if let alarm = coordinator.firingAlarm {
                     AlarmFiringOverlay(
@@ -77,14 +78,17 @@ struct ContentView: View {
                     )
                 }
             }
-            .task {
+
+           .task {
                 await requestNotificationPermission()
                 await scheduler.sync(alarms: store.alarms)
                 NotificationDelegate.shared.coordinator = coordinator
                 NotificationDelegate.shared.alarmLookup = { [store] in store.alarms }
                 UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
+                hasAppeared = true
             }
             .onChange(of: store.alarms) { _, newAlarms in
+                guard hasAppeared else { return }
                 Task { await scheduler.sync(alarms: newAlarms) }
             }
             #endif
