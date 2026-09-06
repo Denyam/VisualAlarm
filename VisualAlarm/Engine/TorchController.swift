@@ -17,7 +17,12 @@ class TorchController: TorchControlling {
 
             defer { device.unlockForConfiguration() }
 
-            if on && device.isTorchModeSupported(.on) {
+            guard device.isTorchModeSupported(.on) else {
+                device.torchMode = .off
+                return false
+            }
+
+            if on {
                 try device.setTorchModeOn(level: AVCaptureDevice.maxAvailableTorchLevel)
             } else {
                 device.torchMode = .off
