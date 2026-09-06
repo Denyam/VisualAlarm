@@ -64,6 +64,20 @@ struct AlarmStoreTests {
         #expect(AlarmStore(directory: directory, darwin: SilentNotifier()).alarms == [second])
     }
 
+    @Test func deleteAtOffsetsRemovesMultipleAndPersistsOnce() throws {
+        let directory = try makeTemporaryDirectory()
+        let a1 = Alarm(hour: 1, minute: 1)
+        let a2 = Alarm(hour: 2, minute: 2)
+        let a3 = Alarm(hour: 3, minute: 3)
+        let store = AlarmStore(directory: directory, darwin: SilentNotifier())
+        store.upsert(a1); store.upsert(a2); store.upsert(a3)
+
+        store.delete(atOffsets: IndexSet([0, 2]))
+
+        #expect(store.alarms == [a2])
+        #expect(AlarmStore(directory: directory, darwin: SilentNotifier()).alarms == [a2])
+    }
+
     @Test func loadReflectsExternalFileChanges() throws {
         let directory = try makeTemporaryDirectory()
         let store = AlarmStore(directory: directory, darwin: SilentNotifier())

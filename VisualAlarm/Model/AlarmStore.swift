@@ -72,11 +72,13 @@ final class AlarmStore: ObservableObject {
     }
 
     func delete(atOffsets offsets: IndexSet) {
-        let ids = offsets
-            .compactMap { index -> UUID? in
+        let idsToDelete = Set(
+            offsets.compactMap { index -> UUID? in
                 alarms.indices.contains(index) ? alarms[index].id : nil
             }
-        ids.forEach { delete(id: $0) }
+        )
+        alarms.removeAll { idsToDelete.contains($0.id) }
+        persist()
     }
 
     /// Enables or disables the alarm with the given identifier.
