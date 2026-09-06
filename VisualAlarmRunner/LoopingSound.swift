@@ -31,7 +31,9 @@ import Foundation
     }
 
     func sound(_ sound: NSSound, didFinishPlaying finished: Bool) {
-        guard self.shouldLoop else { return }
-        _ = sound.play()
+        Task { @MainActor in
+            guard self.shouldLoop else { return }
+            _ = sound.play()
+        }
     }
 }
