@@ -180,6 +180,55 @@ struct AlarmSchedulerTests {
         #expect(fired.count == 0)
     }
 
+    @Test func concurrentResyncAndStepDoNotRace() async throws {
+        let directory = try TemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory.url) }
+
+        let dueAt = epoch.addingTimeInterval(10)
+        let store = AlarmStore(directory: directory.url, darwin: SilentNotifier())
+        store.upsert(Alarm(label: "soon", hour: hour(of: dueAt), minute: minute(of: dueAt)))
+
+        let clock = FakeClock(start: epoch)
+        let fired = FiredBox()
+        let cursorValues = CursorRecorder()
+        let scheduler = AlarmScheduler(
+            alarms: { store.alarms },
+            now: { clock.now },
+            calendar: calendar,
+            graceWindow: 60,
+            maxChunk: 30,
+            onFire: { fired.append($0) }
+        )
+
+        // Run step() and resync() concurrently many times
+        await withTaskGroup(of: Void.self) { group in
+            for _ in 0..<100 {
+                group.addTask {
+                    await scheduler.step { _ in }
+                    await cursorValues.record(scheduler.catchupCursorForTest)
+                }
+                group.addTask {
+                    scheduler.resync()
+                    await cursorValues.record(scheduler.catchupCursorForTest)
+                }
+            }
+        }
+
+        // Verify no duplicate fires (cursor never went backwards)
+        if fired.count > 1 {
+            print("FAIL: fired.count = \(fired.count)")
+        }
+        #expect(fired.count <= 1)
+        // Verify cursor monotonicity (all recorded values non-decreasing)
+        let values = await cursorValues.values
+        for i in 1..<values.count {
+            if values[i] < values[i - 1] {
+                print("FAIL: Cursor went backwards at index \(i): \(values[i-1]) -> \(values[i])")
+            }
+            #expect(values[i] >= values[i - 1], "Cursor went backwards: \(values[i-1]) -> \(values[i])")
+        }
+    }
+
     // MARK: - Helpers
 
     private func hour(of date: Date) -> Int {
@@ -228,6 +277,17 @@ private final class SleepRecorder: @unchecked Sendable {
     func record(_ duration: Duration) {
         lock.lock()
         durations.append(Double(duration.components.seconds))
+        lock.unlock()
+    }
+}
+
+private final class CursorRecorder: @unchecked Sendable {
+    private let lock = NSLock()
+    private(set) var values: [Date] = []
+
+    func record(_ date: Date) {
+        lock.lock()
+        values.append(date)
         lock.unlock()
     }
 }
