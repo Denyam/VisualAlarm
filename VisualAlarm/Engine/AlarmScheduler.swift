@@ -37,7 +37,7 @@ final class AlarmScheduler: @unchecked Sendable {
 
     init(
         alarms: @escaping @Sendable () -> [Alarm],
-        now: @escaping @Sendable () -> Date = Date.init,
+        now: @escaping @Sendable () -> Date = { Date() },
         calendar: Calendar = .current,
         graceWindow: TimeInterval = 60,
         maxChunk: TimeInterval = 30,
@@ -57,6 +57,8 @@ final class AlarmScheduler: @unchecked Sendable {
     /// the grace window. Internal for tests.
     func decide(currentTime: Date) -> Decision {
         schedulerLock.lock()
+        defer { schedulerLock.unlock() }
+
         let candidates = alarmsProvider()
             .filter(\.isEnabled)
             .compactMap { alarm -> (Alarm, Date)? in
@@ -70,13 +72,12 @@ final class AlarmScheduler: @unchecked Sendable {
 
         while true {
             guard let (alarm, target) = candidates.first else {
-                schedulerLock.unlock()
                 return .waitUntil(currentTime.addingTimeInterval(maxChunk))
             }
 
             if target <= currentTime {
                 if currentTime.timeIntervalSince(target) <= graceWindow {
-                    schedulerLock.unlock()
+                    catchupCursor = target.addingTimeInterval(1)
                     return .fire(alarm: alarm, target: target)
                 }
                 // Stale beyond grace: skip it and look again immediately.
@@ -84,7 +85,6 @@ final class AlarmScheduler: @unchecked Sendable {
                 continue
             }
 
-            schedulerLock.unlock()
             return .waitUntil(target)
         }
     }
@@ -97,8 +97,7 @@ final class AlarmScheduler: @unchecked Sendable {
         let currentTime = now()
 
         switch decide(currentTime: currentTime) {
-        case .fire(let alarm, let target):
-            catchupCursor = target.addingTimeInterval(1)
+        case .fire(let alarm, _):
             onFire(alarm)
 
         case .waitUntil(let target):
@@ -120,8 +119,20 @@ final class AlarmScheduler: @unchecked Sendable {
     }
 
     /// Re-anchors the catch-up window to right now (used when the alarm store
-    /// changed or the Mac woke from sleep).
+    /// changed or the Mac woke from sleep). Only moves the cursor forward.
     func resync() {
-        catchupCursor = now().addingTimeInterval(-graceWindow)
+        schedulerLock.lock()
+        let newCursor = now().addingTimeInterval(-graceWindow)
+        if newCursor > catchupCursor {
+            catchupCursor = newCursor
+        }
+        schedulerLock.unlock()
+    }
+
+    /// Test-only accessor for catchupCursor.
+    var catchupCursorForTest: Date {
+        schedulerLock.lock()
+        defer { schedulerLock.unlock() }
+        return catchupCursor
     }
 }
