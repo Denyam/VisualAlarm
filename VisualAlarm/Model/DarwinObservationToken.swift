@@ -12,9 +12,23 @@ final class DarwinObservationToken {
     let queue: DispatchQueue
     let block: () -> Void
 
-    private lazy var observerPointer: UnsafeMutableRawPointer = {
-        Unmanaged.passUnretained(self).toOpaque()
-    }()
+    private let lock = NSRecursiveLock()
+    
+    private var observerPointer: UnsafeMutableRawPointer {
+        lock.lock()
+        
+        defer {
+            lock.unlock()
+        }
+        
+        if observerPointerStorage == nil {
+            observerPointerStorage = Unmanaged.passUnretained(self).toOpaque()
+        }
+        
+        return observerPointerStorage!
+    }
+
+    private var observerPointerStorage = UnsafeMutableRawPointer(bitPattern: 0)
 
     init(
         center: CFNotificationCenter,
