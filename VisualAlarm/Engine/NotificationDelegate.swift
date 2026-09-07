@@ -20,7 +20,7 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
-        activateEffect(for: notification.request.identifier)
+        await activateEffect(for: notification.request.identifier)
         return []
     }
 
@@ -28,14 +28,14 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
     ) async {
-        activateEffect(for: response.notification.request.identifier)
+        await activateEffect(for: response.notification.request.identifier)
     }
 
-    private func activateEffect(for identifier: String) {
+    private func activateEffect(for identifier: String) async {
         guard let alarmID = IOSAlarmScheduler.alarmID(fromIdentifier: identifier),
               let alarm = alarmLookup().first(where: { $0.id == alarmID })
         else { return }
-        coordinator?.start(for: alarm)
+        await coordinator?.start(for: alarm)
     }
 }
 #endif
