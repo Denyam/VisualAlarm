@@ -1,3 +1,9 @@
+/**
+ * File: TorchController.swift
+ * Created: 2026-08-22
+ */
+
+#if os(iOS)
 import AVFoundation
 
 /// Seam for torch control; lets effect coordination be unit-tested.
@@ -36,3 +42,4 @@ class TorchController: TorchControlling {
         }
     }
 }
+#endif

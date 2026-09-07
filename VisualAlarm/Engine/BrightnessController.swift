@@ -1,3 +1,9 @@
+/**
+ * File: BrightnessController.swift
+ * Created: 2026-08-22
+ */
+
+#if os(iOS)
 import UIKit
 
 /// Seam for screen brightness; lets effect coordination be unit-tested.
@@ -23,3 +29,4 @@ public class BrightnessController: ScreenBrightnessControlling {
         return true
     }
 }
+#endif

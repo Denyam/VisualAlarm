@@ -3,6 +3,7 @@
  * Created: 2026-08-24
  */
 
+#if os(macOS)
 import Foundation
 
 /// Spawns the alarm window process for a due alarm and records what is
@@ -10,3 +11,4 @@ import Foundation
 protocol RunnerLaunching {
     func launch(firingAlarm alarm: Alarm)
 }
+#endif
