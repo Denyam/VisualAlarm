@@ -59,6 +59,13 @@
 				Engine/NotificationScheduling.swift = (ios, );
 				Engine/TorchController.swift = (ios, );
 				View/AlarmFiringOverlay.swift = (ios, );
+				Engine/MacBrightnessController.swift = (macosx, );
+				Engine/MacBrightnessControlling.swift = (macosx, );
+				Engine/SMAppServiceRegistrar.swift = (macosx, );
+				Engine/RunnerLaunching.swift = (macosx, );
+				Engine/WorkspaceRunnerLauncher.swift = (macosx, );
+				View/AgentRegistrarModel.swift = (macosx, );
+				View/AgentStatusBanner.swift = (macosx, );
 			};
 			target = 3909CF7C302F709E00912A27 /* VisualAlarm */;
 		};
