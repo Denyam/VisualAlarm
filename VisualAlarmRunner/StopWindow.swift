@@ -59,9 +59,10 @@ final class StopWindow: NSObject, NSWindowDelegate {
         stack.spacing = 24
         stack.translatesAutoresizingMaskIntoConstraints = false
         window.contentView?.addSubview(stack)
+        guard let contentView = window.contentView else { return }
         NSLayoutConstraint.activate([
-            stack.centerXAnchor.constraint(equalTo: window.contentView!.centerXAnchor),
-            stack.centerYAnchor.constraint(equalTo: window.contentView!.centerYAnchor),
+            stack.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            stack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])
     }
 

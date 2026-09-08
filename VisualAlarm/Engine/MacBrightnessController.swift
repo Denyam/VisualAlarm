@@ -73,7 +73,7 @@ final class MacBrightnessController: MacBrightnessControlling {
 
         while case let service = IOIteratorNext(iterator), service != 0 {
             var value: Float = -1
-            if getParam!(service, 0, Self.brightnessKey, &value) == KERN_SUCCESS {
+            if getParam?(service, 0, Self.brightnessKey, &value) == KERN_SUCCESS {
                 originals.append((service, value))
                 services.append(service)
             } else {
@@ -86,7 +86,7 @@ final class MacBrightnessController: MacBrightnessControlling {
     func setAllDisplays(to value: Float) -> Bool {
         guard isSupported, !services.isEmpty else { return false }
         return services.allSatisfy { service in
-            setParam!(service, 0, Self.brightnessKey, value) == KERN_SUCCESS
+            setParam?(service, 0, Self.brightnessKey, value) == KERN_SUCCESS
         }
     }
 
