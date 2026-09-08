@@ -22,11 +22,8 @@ public class BrightnessController: ScreenBrightnessControlling {
 
     /// Sets the device screen brightness.
     /// - Parameter level: Desired brightness value ranging from `0.0` (dark) to `1.0` (maximum).
-    /// - Returns: `true` if the brightness was changed successfully, otherwise `false`.
-    @discardableResult
-    public func setBrightness(to level: CGFloat) -> Bool {
+    public func setBrightness(to level: CGFloat) {
         brightness = level
-        return true
     }
 }
 #endif

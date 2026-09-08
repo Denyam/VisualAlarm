@@ -10,11 +10,7 @@ struct AlarmRowView: View {
     let alarm: Alarm
     let setEnabled: (Bool) -> Void
     let onEdit: () -> Void
-
-    @State private var now = Date()
-
-    private static let clockTick = Timer.publish(every: 30, on: .main, in: .common)
-        .autoconnect()
+    let now: Date
 
     var body: some View {
         HStack(spacing: 12) {
@@ -45,8 +41,5 @@ struct AlarmRowView: View {
                 .labelsHidden()
         }
         .padding(.vertical, 2)
-        .onReceive(Self.clockTick) { tick in
-            now = tick
-        }
     }
 }

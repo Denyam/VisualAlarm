@@ -12,8 +12,10 @@ protocol HapticSignaling {
 }
 
 struct AlertHaptics: HapticSignaling {
+    private let generator = UINotificationFeedbackGenerator()
+
     func fire() {
-        UINotificationFeedbackGenerator().notificationOccurred(.error)
+        generator.notificationOccurred(.error)
     }
 }
 #endif
