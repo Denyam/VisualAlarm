@@ -1,10 +1,16 @@
 import SwiftUI
 import UserNotifications
+import Combine
 
 struct ContentView: View {
     @ObservedObject private var store = AlarmStore.shared
     @State private var editorTarget: EditorTarget?
     @State private var hasAppeared = false
+    @State private var now = Date()
+    
+    private static let clockTick = Timer.publish(every: 30, on: .main, in: .common)
+        .autoconnect()
+    
     #if os(iOS)
     @StateObject private var coordinator = AlarmEffectCoordinator()
     private let scheduler = IOSAlarmScheduler()
@@ -29,7 +35,8 @@ struct ContentView: View {
                                 },
                                 onEdit: {
                                     editorTarget = EditorTarget(alarm: alarm)
-                                }
+                                },
+                                now: now
                             )
                             .contextMenu {
                                 Button("Edit…") {
@@ -68,6 +75,9 @@ struct ContentView: View {
                         store.upsert(alarm)
                     }
                 )
+            }
+            .onReceive(Self.clockTick) { tick in
+                now = tick
             }
 #if os(iOS)
             .overlay {
