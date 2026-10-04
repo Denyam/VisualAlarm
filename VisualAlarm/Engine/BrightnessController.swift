@@ -19,11 +19,5 @@ public class BrightnessController: ScreenBrightnessControlling {
             UIScreen.main.brightness = max(0.0, min(1.0, newValue))
         }
     }
-
-    /// Sets the device screen brightness.
-    /// - Parameter level: Desired brightness value ranging from `0.0` (dark) to `1.0` (maximum).
-    public func setBrightness(to level: CGFloat) {
-        brightness = level
-    }
 }
 #endif

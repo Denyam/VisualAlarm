@@ -40,6 +40,7 @@ struct AlarmFiringOverlay: View {
         .transition(.opacity)
         .animation(.easeInOut, value: appeared)
         .onAppear { appeared = true }
+        .onDisappear { appeared = false }
     }
 }
 #endif
