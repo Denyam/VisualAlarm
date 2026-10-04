@@ -18,5 +18,21 @@ struct MacBrightnessControllerTests {
     @Test func unknownSymbolsResolveToNil() {
         #expect(MacBrightnessController.loadSymbol("DefinitelyNotARealSymbol_va") == nil)
     }
+
+    @Test func concurrentAccessDoesNotCrash() async {
+        let controller = MacBrightnessController()
+
+        await withTaskGroup(of: Void.self) { group in
+            for _ in 0..<10 {
+                group.addTask {
+                    controller.storeCurrentLevels()
+                    _ = controller.setAllDisplays(to: 1.0)
+                    _ = controller.setAllDisplays(to: 0.0)
+                    controller.restoreStoredLevels()
+                    _ = controller.displayCount
+                }
+            }
+        }
+    }
 }
 #endif

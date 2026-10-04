@@ -22,11 +22,16 @@ final class MacBrightnessController: MacBrightnessControlling {
 
     private let getParam: GetFloatFn?
     private let setParam: SetFloatFn?
+    private let lock = NSLock()
     private var services: [io_service_t] = []
     private var originals: [(service: io_service_t, value: Float)] = []
 
     /// Number of displays currently held after `storeCurrentLevels`.
-    var displayCount: Int { services.count }
+    var displayCount: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return services.count
+    }
 
     /// Whether brightness manipulation is available at all.
     var isSupported: Bool {
@@ -61,7 +66,9 @@ final class MacBrightnessController: MacBrightnessControlling {
     /// `restoreStoredLevels` can bring them back later.
     func storeCurrentLevels() {
         guard isSupported else { return }
-        releaseServices()
+        lock.lock()
+        defer { lock.unlock() }
+        releaseServicesUnlocked()
 
         var iterator: io_iterator_t = 0
         guard IOServiceGetMatchingServices(
@@ -84,20 +91,26 @@ final class MacBrightnessController: MacBrightnessControlling {
 
     @discardableResult
     func setAllDisplays(to value: Float) -> Bool {
-        guard isSupported, !services.isEmpty else { return false }
+        guard isSupported else { return false }
+        lock.lock()
+        defer { lock.unlock() }
+        guard !services.isEmpty else { return false }
         return services.allSatisfy { service in
             setParam?(service, 0, Self.brightnessKey, value) == KERN_SUCCESS
         }
     }
 
     func restoreStoredLevels() {
+        lock.lock()
+        defer { lock.unlock() }
         for original in originals {
             _ = setParam?(original.service, 0, Self.brightnessKey, original.value)
         }
-        releaseServices()
+        releaseServicesUnlocked()
     }
 
-    private func releaseServices() {
+    /// Releases held services and clears both arrays. Caller must hold `lock`.
+    private func releaseServicesUnlocked() {
         services.forEach { IOObjectRelease($0) }
         services = []
         originals = []

@@ -10,6 +10,7 @@ final class AgentRegistrarModel: ObservableObject {
         .notRegistered
 
     private let plistName: String
+    private var currentTask: Task<Void, Never>?
 
     init(plistName: String = SMAppServiceRegistrar.agentPlistName) {
         self.plistName = plistName
@@ -19,11 +20,14 @@ final class AgentRegistrarModel: ObservableObject {
     func refresh() {
         // ServiceManagement calls are synchronous XPC round-trips; keep them
         // off the main thread so the first frame can never stall on smd.
+        // Cancel any in-flight task so a stale result can't overwrite newer status.
+        currentTask?.cancel()
         let name = plistName
-        Task { [weak self] in
+        currentTask = Task { [weak self] in
             let status = await Task.detached {
                 SMAppServiceRegistrar.queryStatus(plistName: name)
             }.value
+            guard !Task.isCancelled else { return }
             self?.status = status
         }
     }
@@ -37,14 +41,16 @@ final class AgentRegistrarModel: ObservableObject {
     }
 
     private func mutate(register: Bool) {
+        currentTask?.cancel()
         let name = plistName
-        Task { [weak self] in
+        currentTask = Task { [weak self] in
             let status = await Task.detached {
                 await SMAppServiceRegistrar.performRegistration(
                     register: register,
                     plistName: name
                 )
             }.value
+            guard !Task.isCancelled else { return }
             self?.status = status
         }
     }
