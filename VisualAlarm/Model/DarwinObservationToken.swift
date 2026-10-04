@@ -16,15 +16,11 @@ final class DarwinObservationToken {
     
     private var observerPointer: UnsafeMutableRawPointer {
         lock.lock()
-        
-        defer {
-            lock.unlock()
-        }
-        
+        defer { lock.unlock() }
         if observerPointerStorage == nil {
+            // Use unretained pointer; we only need an opaque identifier for CFNotificationCenter
             observerPointerStorage = Unmanaged.passUnretained(self).toOpaque()
         }
-        
         return observerPointerStorage!
     }
 
