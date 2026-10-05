@@ -6,15 +6,20 @@ import Foundation
 /// Drives the macOS agent-registration banner.
 @MainActor
 final class AgentRegistrarModel: ObservableObject {
-    @Published private(set) var status: SMAppServiceRegistrar.RegistrationStatus =
-        .notRegistered
+    @Published private(set) var status: AgentRegistrationStatus = .notRegistered
 
-    private let plistName: String
+    private let registrar: any AgentRegistering
     private var currentTask: Task<Void, Never>?
 
-    init(plistName: String = SMAppServiceRegistrar.agentPlistName) {
-        self.plistName = plistName
+    // A default argument would evaluate `make()` in a nonisolated context,
+    // so the convenience init provides the default registrar instead.
+    init(registrar: any AgentRegistering) {
+        self.registrar = registrar
         refresh()
+    }
+
+    convenience init() {
+        self.init(registrar: AgentRegistrationFactory.make())
     }
 
     func refresh() {
@@ -22,41 +27,32 @@ final class AgentRegistrarModel: ObservableObject {
         // off the main thread so the first frame can never stall on smd.
         // Cancel any in-flight task so a stale result can't overwrite newer status.
         currentTask?.cancel()
-        let name = plistName
-        currentTask = Task { [weak self] in
-            let status = await Task.detached {
-                SMAppServiceRegistrar.queryStatus(plistName: name)
-            }.value
+        currentTask = Task { [weak self, registrar] in
+            let status = await registrar.currentStatus()
             guard !Task.isCancelled else { return }
             self?.status = status
         }
     }
 
     func register() {
-        mutate(register: true)
+        mutate(enabled: true)
     }
 
     func unregister() {
-        mutate(register: false)
+        mutate(enabled: false)
     }
 
-    private func mutate(register: Bool) {
+    private func mutate(enabled: Bool) {
         currentTask?.cancel()
-        let name = plistName
-        currentTask = Task { [weak self] in
-            let status = await Task.detached {
-                await SMAppServiceRegistrar.performRegistration(
-                    register: register,
-                    plistName: name
-                )
-            }.value
+        currentTask = Task { [weak self, registrar] in
+            let status = await registrar.setEnabled(enabled)
             guard !Task.isCancelled else { return }
             self?.status = status
         }
     }
 
     func openLoginItemsSettings() {
-        guard let url = SMAppServiceRegistrar.loginItemsSettingsURL else { return }
+        guard let url = registrar.settingsURL else { return }
         NSWorkspace.shared.open(url)
     }
 }
