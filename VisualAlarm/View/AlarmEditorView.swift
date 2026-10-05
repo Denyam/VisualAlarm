@@ -7,17 +7,15 @@ import SwiftUI
 
 struct AlarmEditorView: View {
     @ObservedObject var model: AlarmEditorModel
-    @Environment(\.dismiss) private var dismiss
+    // `presentationMode` works at both floors (dismiss needs macOS 12).
+    @Environment(\.presentationMode) private var presentationMode
 
     var body: some View {
-        NavigationStack {
+        NavigationView {
             Form {
-                Section("Alarm") {
-                    TextField(
-                        "Label",
-                        text: $model.label,
-                        prompt: Text("e.g. Wake up")
-                    )
+                Section(header: Text("Alarm")) {
+                    // No `prompt:` (macOS 12+); the placeholder carries the hint.
+                    TextField("e.g. Wake up", text: $model.label)
                     DatePicker(
                         "Time",
                         selection: $model.time,
@@ -25,20 +23,21 @@ struct AlarmEditorView: View {
                     )
                     Toggle("Enabled", isOn: $model.isEnabled)
                 }
-                Section("Repeat") {
+                Section(header: Text("Repeat")) {
                     WeekdayChips(selection: $model.weekdays)
                 }
             }
-            .navigationTitle(model.isEditingExisting ? "Edit Alarm" : "New Alarm")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        model.save()
-                        dismiss()
-                    }
+            .vaNavigationTitle(model.isEditingExisting ? "Edit Alarm" : "New Alarm")
+            .vaToolbarItem(
+                placement: .cancellationAction,
+                fallbackAlignment: .topLeading
+            ) {
+                Button("Cancel") { presentationMode.wrappedValue.dismiss() }
+            }
+            .vaToolbarItem(placement: .confirmationAction) {
+                Button("Save") {
+                    model.save()
+                    presentationMode.wrappedValue.dismiss()
                 }
             }
         }
