@@ -9,10 +9,12 @@ struct FlickerEffectControllerTests {
     @Test func startsOnAndAlternatesPhasesOnEachTick() async throws {
         let clock = VirtualClock()
         let counter = EffectCounterBox()
-        let controller = FlickerEffectController(interval: .seconds(1))
+        let controller = FlickerEffectController(
+            interval: 1,
+            sleep: clock.sleeper
+        )
 
         let task = controller.start(
-            clock: clock,
             onPhase: { counter.incrementOn() },
             offPhase: { counter.incrementOff() },
             restore: { counter.incrementRestore() }
@@ -37,8 +39,7 @@ struct FlickerEffectControllerTests {
         let clock = VirtualClock()
         let counter = EffectCounterBox()
 
-        let task = FlickerEffectController(interval: .seconds(1)).start(
-            clock: clock,
+        let task = FlickerEffectController(interval: 1, sleep: clock.sleeper).start(
             onPhase: { counter.incrementOn() },
             offPhase: { counter.incrementOff() },
             restore: { counter.incrementRestore() }
@@ -54,7 +55,7 @@ struct FlickerEffectControllerTests {
         _ = await task.result
 
         clock.tick()
-        try await Task.sleep(for: .milliseconds(50))
+        try await Task.sleep(nanoseconds: 50 * 1_000_000)
 
         #expect(counter.restore == 1)
         #expect(counter.off == 0)
@@ -111,7 +112,7 @@ private func waitFor(
 ) async throws {
     let deadline = Date().addingTimeInterval(seconds)
     while !condition() && Date() < deadline {
-        try await Task.sleep(for: .milliseconds(5))
+        try await Task.sleep(nanoseconds: 5 * 1_000_000)
     }
     #expect(condition())
 }

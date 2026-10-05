@@ -274,9 +274,9 @@ private final class SleepRecorder: @unchecked Sendable {
     private let lock = NSLock()
     private(set) var durations: [Double] = []
 
-    func record(_ duration: Duration) {
+    func record(_ seconds: TimeInterval) {
         lock.lock()
-        durations.append(Double(duration.components.seconds))
+        durations.append(seconds)
         lock.unlock()
     }
 }
