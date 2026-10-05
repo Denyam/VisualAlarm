@@ -29,7 +29,7 @@ struct VisualAlarmApp: App {
             let store = AlarmStore.shared
             print("app: loaded \(store.alarms.count) alarm(s) from \(AppGroup.directory.path)")
             fflush(stdout)
-            try? await Task.sleep(for: .seconds(seconds))
+            try? await Task.sleep(seconds: TimeInterval(seconds))
             NSApp.terminate(nil)
             return
         }

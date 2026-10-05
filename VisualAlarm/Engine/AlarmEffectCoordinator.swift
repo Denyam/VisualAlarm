@@ -50,7 +50,7 @@ final class AlarmEffectCoordinator: ObservableObject {
         brightness: ScreenBrightnessControlling = BrightnessController(),
         haptics: HapticSignaling = AlertHaptics(),
         flicker: FlickerEffectController = FlickerEffectController(
-            interval: .milliseconds(500)
+            interval: 0.5
         )
     ) {
         self.torch = torch
@@ -62,13 +62,6 @@ final class AlarmEffectCoordinator: ObservableObject {
     /// Starts the effect for the given alarm. Repeated calls replace the
     /// running effect without disturbing the original brightness snapshot.
     func start(for alarm: Alarm) async {
-        await start(for: alarm, clock: ContinuousClock())
-    }
-
-    func start<C: Clock>(
-        for alarm: Alarm,
-        clock: C
-    ) async where C.Instant.Duration == Duration {
         // Priority: pending brightness (set by stop) > original brightness > current brightness
         let brightnessSnapshot = pendingBrightness ?? originalBrightness ?? brightnessBox.brightness
         pendingBrightness = nil
@@ -86,7 +79,6 @@ final class AlarmEffectCoordinator: ObservableObject {
         }
 
         effectTask = flicker.start(
-            clock: clock,
             onPhase: {
                 _ = torch.setTorch(on: true)
                 box.brightness = 1.0

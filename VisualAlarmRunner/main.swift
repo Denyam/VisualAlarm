@@ -37,7 +37,7 @@ app.delegate = coordinator
 
 if let seconds = smokeTestSeconds {
     Task { @MainActor in
-        try? await Task.sleep(for: .seconds(seconds))
+        try? await Task.sleep(seconds: TimeInterval(seconds))
         print("VA_SMOKE: auto-stopping after \(seconds)s")
         NSApp.terminate(nil)
     }

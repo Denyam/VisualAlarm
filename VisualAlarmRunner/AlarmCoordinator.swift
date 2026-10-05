@@ -15,7 +15,7 @@ final class AlarmCoordinator: NSObject, NSApplicationDelegate {
     private var effectTask: Task<Void, Never>?
 
     private let brightness = MacBrightnessController()
-    private let flicker = FlickerEffectController(interval: .milliseconds(500))
+    private let flicker = FlickerEffectController(interval: 0.5)
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         print("runner: didFinishLaunching")
@@ -68,7 +68,6 @@ final class AlarmCoordinator: NSObject, NSApplicationDelegate {
                 + "displays=\(brightness.displayCount)"
         )
         effectTask = flicker.start(
-            clock: ContinuousClock(),
             onPhase: { [brightness] in
                 if !brightness.setAllDisplays(to: 1.0) {
                     print("runner: set max FAILED")
