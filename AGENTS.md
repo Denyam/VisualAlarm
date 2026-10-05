@@ -37,9 +37,13 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
 
 ## Conventions
 
-- Timers/scheduling/effects: Swift Concurrency only (`Task.sleep` +
-  `ContinuousClock`, sleep chunks ≤ 30 s, cancellable Tasks). Never
-  `DispatchSourceTimer` or `Timer` for scheduling or effects.
+- Timers/scheduling/effects: Swift Concurrency only (sleep chunks ≤ 30 s,
+  cancellable Tasks, `Task.sleep(seconds:)` through the injected sleeper seam
+  in `FlickerEffectController` / `AlarmScheduler.step(sleep:)`). NEVER
+  `Duration`/`Clock`/`ContinuousClock`/`Task.sleep(for:)` — they require
+  macOS 13+ / iOS 16+, above the macOS 10.15 / iOS 15.5 deployment floors
+  (use plain `TimeInterval` seconds instead). Never `DispatchSourceTimer` or
+  `Timer` for scheduling or effects.
 - Platform splits via `#if os(...)` or synchronized-folder platform filters
   (`VisualAlarm/BrightnessController.swift` is currently iOS-only).
 - Restore original brightness/torch state when an alarm stops.

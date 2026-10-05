@@ -17,7 +17,7 @@ private let smokeTestSeconds = ProcessInfo.processInfo.environment["VA_SMOKE_SEC
 
 if let seconds = smokeTestSeconds {
     Task { @MainActor in
-        try? await Task.sleep(for: .seconds(seconds))
+        try? await Task.sleep(seconds: TimeInterval(seconds))
         print("agent: VA_SMOKE auto-stop")
         NSApp.terminate(nil)
     }
