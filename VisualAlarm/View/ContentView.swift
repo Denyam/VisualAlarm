@@ -17,13 +17,13 @@ struct ContentView: View {
     #endif
 
     var body: some View {
-        NavigationStack {
+        NavigationView {
             Group {
                 if store.alarms.isEmpty {
-                    ContentUnavailableView(
-                        "No alarms",
+                    VAContentUnavailableView(
+                        title: "No alarms",
                         systemImage: "alarm",
-                        description: Text("Add one to get started.")
+                        message: "Add one to get started."
                     )
                 } else {
                     List {
@@ -43,32 +43,28 @@ struct ContentView: View {
                                     editorTarget = EditorTarget(alarm: alarm)
                                 }
                                 Divider()
-                                Button(
-                                    "Delete",
-                                    role: .destructive,
-                                    action: { store.delete(id: alarm.id) }
-                                )
+                                deleteButton(for: alarm)
                             }
                         }
                         .onDelete { store.delete(atOffsets: $0) }
                     }
                 }
             }
-            .navigationTitle("Alarms")
+            .vaNavigationTitle("Alarms")
+            // Toolbar before the banner inset: on the macOS 10.15 fallback
+            // path the "+" overlays the list below the banner row.
+            .vaToolbarItem(placement: .primaryAction) {
+                Button {
+                    editorTarget = EditorTarget(alarm: nil)
+                } label: {
+                    VASymbolImage(systemName: "plus", fallback: "+")
+                }
+            }
             #if os(macOS)
-            .safeAreaInset(edge: .top, spacing: 0) {
+            .vaSafeAreaInset(edge: .top, spacing: 0) {
                 AgentStatusBanner()
             }
             #endif
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        editorTarget = EditorTarget(alarm: nil)
-                    } label: {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
             .sheet(item: $editorTarget) { target in
                 AlarmEditorView(
                     model: AlarmEditorModel(alarm: target.alarm) { alarm in
@@ -97,12 +93,38 @@ struct ContentView: View {
                 UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
                 hasAppeared = true
             }
-            .onChange(of: store.alarms) { _, newAlarms in
+            .onChange(of: store.alarms) { newAlarms in
                 guard hasAppeared else { return }
                 Task { await scheduler.sync(alarms: newAlarms) }
             }
             #endif
         }
+        #if os(iOS)
+        // Keep the single-column stack layout NavigationStack had (iPad
+        // otherwise renders a two-column browser); macOS NavigationView is
+        // stack-only and has no StackNavigationViewStyle.
+        .navigationViewStyle(StackNavigationViewStyle())
+        #endif
+    }
+
+    @ViewBuilder
+    private func deleteButton(for alarm: Alarm) -> some View {
+        #if os(macOS)
+        // `Button(role:)` needs macOS 12; 10.15–11 use a plain delete.
+        if #available(macOS 12.0, *) {
+            Button("Delete", role: .destructive) {
+                store.delete(id: alarm.id)
+            }
+        } else {
+            Button("Delete") {
+                store.delete(id: alarm.id)
+            }
+        }
+        #else
+        Button("Delete", role: .destructive) {
+            store.delete(id: alarm.id)
+        }
+        #endif
     }
 
     #if os(iOS)

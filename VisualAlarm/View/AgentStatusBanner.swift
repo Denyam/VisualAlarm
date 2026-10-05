@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct AgentStatusBanner: View {
-    @StateObject private var model = AgentRegistrarModel()
+    @VAStateObject private var model = AgentRegistrarModel()
 
     var body: some View {
         HStack(spacing: 10) {
@@ -31,7 +31,7 @@ struct AgentStatusBanner: View {
         .font(.callout)
         .padding(.horizontal)
         .padding(.vertical, 6)
-        .background(.bar)
+        .background(Color.vaBar)
         .onAppear { model.refresh() }
     }
 

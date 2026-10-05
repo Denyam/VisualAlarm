@@ -28,8 +28,8 @@ struct WeekdayChips: View {
                         .font(.footnote.weight(.semibold))
                         .frame(width: 30, height: 30)
                 }
-                .buttonStyle(.bordered)
-                .tint(isOn ? .accentColor : .secondary)
+                .vaBorderedButtonStyle()
+                .vaTint(isOn ? .accentColor : .secondary)
                 .opacity(isOn ? 1 : 0.6)
             }
         }
