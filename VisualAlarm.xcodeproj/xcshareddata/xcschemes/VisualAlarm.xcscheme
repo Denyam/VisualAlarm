@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C0DE000000000000000000B3"
-               BuildableName = "VisualAlarmRunner.app"
-               BlueprintName = "VisualAlarmRunner"
+               BlueprintIdentifier = "3909CF7C302F709E00912A27"
+               BuildableName = "VisualAlarm.app"
+               BlueprintName = "VisualAlarm"
                ReferencedContainer = "container:VisualAlarm.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C0DE000000000000000000B3"
-            BuildableName = "VisualAlarmRunner.app"
-            BlueprintName = "VisualAlarmRunner"
+            BlueprintIdentifier = "3909CF7C302F709E00912A27"
+            BuildableName = "VisualAlarm.app"
+            BlueprintName = "VisualAlarm"
             ReferencedContainer = "container:VisualAlarm.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C0DE000000000000000000B3"
-            BuildableName = "VisualAlarmRunner.app"
-            BlueprintName = "VisualAlarmRunner"
+            BlueprintIdentifier = "3909CF7C302F709E00912A27"
+            BuildableName = "VisualAlarm.app"
+            BlueprintName = "VisualAlarm"
             ReferencedContainer = "container:VisualAlarm.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

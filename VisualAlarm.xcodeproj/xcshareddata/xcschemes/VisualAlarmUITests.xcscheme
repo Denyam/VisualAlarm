@@ -19,9 +19,9 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3909CF89302F70A200912A27"
-               BuildableName = "VisualAlarmTests.xctest"
-               BlueprintName = "VisualAlarmTests"
+               BlueprintIdentifier = "3909CF93302F70A200912A27"
+               BuildableName = "VisualAlarmUITests.xctest"
+               BlueprintName = "VisualAlarmUITests"
                ReferencedContainer = "container:VisualAlarm.xcodeproj">
             </BuildableReference>
          </TestableReference>
