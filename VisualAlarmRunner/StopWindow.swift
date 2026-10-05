@@ -51,8 +51,13 @@ final class StopWindow: NSObject, NSWindowDelegate {
         )
         button.bezelStyle = .rounded
         button.keyEquivalent = "\r"
-        button.controlSize = .large
-        button.font = .boldSystemFont(ofSize: 16)
+        if #available(macOS 11.0, *) {
+            button.controlSize = .large
+            button.font = .boldSystemFont(ofSize: 16)
+        } else {
+            // `.large` control size needs macOS 11; grow the font instead.
+            button.font = .boldSystemFont(ofSize: 20)
+        }
 
         let stack = NSStackView(views: [label, button])
         stack.orientation = .vertical
