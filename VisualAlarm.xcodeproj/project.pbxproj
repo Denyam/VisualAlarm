@@ -51,6 +51,7 @@
 		3909CFAB30320C4100912A27 /* Exceptions for "VisualAlarm" folder in "VisualAlarm" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			platformFiltersByRelativePath = {
+				AppDelegate.swift = (macos, );
 				Engine/AlarmEffectCoordinator.swift = (ios, );
 				Engine/BrightnessController.swift = (ios, );
 				Engine/HapticSignaling.swift = (ios, );
@@ -63,6 +64,7 @@
 				Engine/SMAppServiceRegistrar.swift = (macos, );
 				Engine/TorchController.swift = (ios, );
 				Engine/WorkspaceRunnerLauncher.swift = (macos, );
+				MaintenanceHooks.swift = (macos, );
 				View/AgentRegistrarModel.swift = (macos, );
 				View/AgentStatusBanner.swift = (macos, );
 				View/AlarmFiringOverlay.swift = (ios, );
@@ -72,6 +74,7 @@
 		C0DE000000000000000000E1 /* Exceptions for "VisualAlarm" folder in "VisualAlarmRunner" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AppDelegate.swift,
 				Assets.xcassets,
 				Engine/AlarmEffectCoordinator.swift,
 				Engine/BrightnessController.swift,
@@ -80,6 +83,8 @@
 				Engine/NotificationDelegate.swift,
 				Engine/NotificationScheduling.swift,
 				Engine/TorchController.swift,
+				main.swift,
+				MaintenanceHooks.swift,
 				View/AgentRegistrarModel.swift,
 				View/AgentStatusBanner.swift,
 				View/AlarmEditorModel.swift,
@@ -96,6 +101,7 @@
 		C0DE000000000000000000E2 /* Exceptions for "VisualAlarm" folder in "VisualAlarmAgent" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AppDelegate.swift,
 				Assets.xcassets,
 				Engine/AlarmEffectCoordinator.swift,
 				Engine/BrightnessController.swift,
@@ -107,6 +113,8 @@
 				Engine/NotificationDelegate.swift,
 				Engine/NotificationScheduling.swift,
 				Engine/TorchController.swift,
+				main.swift,
+				MaintenanceHooks.swift,
 				View/AgentRegistrarModel.swift,
 				View/AgentStatusBanner.swift,
 				View/AlarmEditorModel.swift,

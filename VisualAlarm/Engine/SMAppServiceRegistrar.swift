@@ -4,55 +4,33 @@
  */
 
 #if os(macOS)
-import Combine
 import Foundation
 import ServiceManagement
 
-/// Owns the LaunchAgent registration through SMAppService and exposes its
-/// state for UI. The status mapping is a pure function so it can be unit
-/// tested without touching system state.
+/// Owns the LaunchAgent registration through SMAppService (macOS 13+) and
+/// exposes its state through `AgentRegistering`. The status mapping lives in
+/// `AgentRegistrationStatus.map` so it can be unit tested without touching
+/// system state. Requires macOS 13; older systems use `LoginItemRegistrar`.
+@available(macOS 13.0, *)
 @MainActor
-final class SMAppServiceRegistrar: ObservableObject {
-    enum RegistrationStatus: Equatable {
-        case notRegistered
-        case enabled
-        case requiresApproval
-        case unknown(String)
-
-        /// Pure mapping from the system type; unit-tested directly.
-        static func map(_ status: SMAppService.Status) -> RegistrationStatus {
-            switch status {
-            case .notRegistered: return .notRegistered
-            case .enabled: return .enabled
-            case .requiresApproval: return .requiresApproval
-            case .notFound: return .unknown("notFound")
-            @unknown default:
-                return .unknown("unrecognized rawValue \(status.rawValue)")
-            }
-        }
-    }
-
-    static let agentPlistName = "co.denis.VisualAlarm.agent.plist"
+final class SMAppServiceRegistrar: AgentRegistering {
+    nonisolated static let agentPlistName = "co.denis.VisualAlarm.agent.plist"
 
     /// Deep link into System Settings › Login Items for the approval flow.
     static let loginItemsSettingsURL = URL(
         string: "x-apple.systempreferences:com.apple.LoginItems-Settings.extension"
     )
 
-    private let service: SMAppService
+    private let plistName: String
 
     init(plistName: String = SMAppServiceRegistrar.agentPlistName) {
-        service = .agent(plistName: plistName)
-    }
-
-    var status: RegistrationStatus {
-        .map(service.status)
+        self.plistName = plistName
     }
 
     /// Queries the system off-main; safe to call from any executor.
     nonisolated static func queryStatus(
         plistName: String = SMAppServiceRegistrar.agentPlistName
-    ) -> RegistrationStatus {
+    ) -> AgentRegistrationStatus {
         .map(SMAppService.agent(plistName: plistName).status)
     }
 
@@ -60,7 +38,7 @@ final class SMAppServiceRegistrar: ObservableObject {
     nonisolated static func performRegistration(
         register: Bool,
         plistName: String = SMAppServiceRegistrar.agentPlistName
-    ) async -> RegistrationStatus {
+    ) async -> AgentRegistrationStatus {
         let service = SMAppService.agent(plistName: plistName)
         do {
             if register {
@@ -74,12 +52,23 @@ final class SMAppServiceRegistrar: ObservableObject {
         return queryStatus(plistName: plistName)
     }
 
-    func register() throws {
-        try service.register()
+    func currentStatus() async -> AgentRegistrationStatus {
+        let name = plistName
+        return await Task.detached {
+            SMAppServiceRegistrar.queryStatus(plistName: name)
+        }.value
     }
 
-    func unregister() throws {
-        try service.unregister()
+    func setEnabled(_ enabled: Bool) async -> AgentRegistrationStatus {
+        let name = plistName
+        return await Task.detached {
+            await SMAppServiceRegistrar.performRegistration(
+                register: enabled,
+                plistName: name
+            )
+        }.value
     }
+
+    var settingsURL: URL? { Self.loginItemsSettingsURL }
 }
 #endif
