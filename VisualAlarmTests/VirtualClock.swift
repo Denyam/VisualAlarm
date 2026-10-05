@@ -3,34 +3,38 @@ import Testing
 
 @testable import VisualAlarm
 
-/// Deterministic `Clock` for tests: every sleep suspends until the test calls
-/// `tick()`, which resumes all pending sleeps and advances virtual time.
-/// `waitUntilSuspended()` parks until at least one sleep is pending, so ticks
-/// can never fire before the code under test reached its sleep.
-final class VirtualClock: Clock, @unchecked Sendable {
-    typealias Instant = ContinuousClock.Instant
-
-    let minimumResolution: Duration = .zero
-
+/// Deterministic sleep seam for tests: every sleep suspends until the test
+/// calls `tick()`, which resumes all pending sleeps. `waitUntilSuspended()`
+/// parks until at least one sleep is pending, so ticks can never fire before
+/// the code under test reached its sleep.
+///
+/// Replaces the former `Clock`-conforming `VirtualClock`: `Clock`,
+/// `ContinuousClock`, and `Duration` require macOS 13+ / iOS 16+, above the
+/// macOS 10.15 / iOS 15.5 deployment floors.
+final class VirtualClock: @unchecked Sendable {
     private let lock = NSLock()
-    private let base = ContinuousClock.now
-    private var elapsed: Duration = .zero
+    private var elapsed: TimeInterval = 0
     private var sleepWaiters: [CheckedContinuation<Void, Error>] = []
     private var suspensionWaiters: [CheckedContinuation<Void, Never>] = []
 
-    var now: ContinuousClock.Instant {
+    /// Virtual-time elapsed seconds (advanced by `tick()`).
+    var now: TimeInterval {
         lock.lock()
         defer { lock.unlock() }
-        return base.advanced(by: elapsed)
+        return elapsed
     }
 
-    func sleep(
-        until deadline: ContinuousClock.Instant,
-        tolerance: Duration?
-    ) async throws {
+    /// The sleep closure to inject into the code under test.
+    var sleeper: @Sendable (TimeInterval) async throws -> Void {
+        { [self] seconds in
+            try await self.sleep(seconds)
+        }
+    }
+
+    private func sleep(_ seconds: TimeInterval) async throws {
         try await withCheckedThrowingContinuation { continuation in
             lock.lock()
-            if deadline <= base.advanced(by: elapsed) {
+            if seconds <= 0 {
                 lock.unlock()
                 continuation.resume(returning: ())
                 return
@@ -46,7 +50,7 @@ final class VirtualClock: Clock, @unchecked Sendable {
     /// Resumes every pending sleep once, simulating one interval elapsing.
     func tick() {
         lock.lock()
-        elapsed += .seconds(1)
+        elapsed += 1
         let pending = sleepWaiters
         sleepWaiters.removeAll()
         lock.unlock()
