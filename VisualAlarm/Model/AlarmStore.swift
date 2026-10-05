@@ -5,7 +5,7 @@
 
 import Combine
 import Foundation
-import OSLog
+import os
 
 /// Owns the alarm list and persists it as JSON inside a shared directory so
 /// that the app, agent, and runner processes observe the same state.
@@ -13,7 +13,9 @@ import OSLog
 final class AlarmStore: ObservableObject {
     static let shared = AlarmStore()
 
-    private static let logger = Logger(
+    // printf-style os_log (macOS 10.15-safe); the Logger/OSLogMessage
+    // interpolation API requires macOS 11+.
+    private static let logger = OSLog(
         subsystem: "co.denis.VisualAlarm",
         category: "store"
     )
@@ -51,7 +53,13 @@ final class AlarmStore: ObservableObject {
         do {
             alarms = try JSONDecoder().decode([Alarm].self, from: data)
         } catch {
-            Self.logger.error("Decoding \(self.fileURL.path) failed: \(error.localizedDescription)")
+            os_log(
+                "Decoding %{public}@ failed: %@",
+                log: Self.logger,
+                type: .error,
+                self.fileURL.path,
+                error.localizedDescription
+            )
             alarms = []
         }
         return alarms
@@ -95,7 +103,12 @@ final class AlarmStore: ObservableObject {
             // Tell resident agents (and other windows) to reload.
             darwin.post(.alarmsDidChange)
         } catch {
-            Self.logger.error("Persisting alarms failed: \(error.localizedDescription)")
+            os_log(
+                "Persisting alarms failed: %@",
+                log: Self.logger,
+                type: .error,
+                error.localizedDescription
+            )
         }
     }
 }

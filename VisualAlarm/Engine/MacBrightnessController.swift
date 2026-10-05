@@ -72,7 +72,7 @@ final class MacBrightnessController: MacBrightnessControlling {
 
         var iterator: io_iterator_t = 0
         guard IOServiceGetMatchingServices(
-            kIOMainPortDefault,
+            kIOMasterPortDefault,
             IOServiceMatching("IODisplayConnect"),
             &iterator
         ) == KERN_SUCCESS else { return }
