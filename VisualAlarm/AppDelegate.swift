@@ -16,7 +16,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let ownsWindow: Bool
     private var window: NSWindow?
 
-    init(ownsWindow: Bool = false) {
+    // Both inits must exist: the SwiftUI delegate adaptor calls plain
+    // `init()` (ObjC selector `init`), the Catalina bootstrap passes the flag.
+    override init() {
+        self.ownsWindow = false
+        super.init()
+    }
+
+    init(ownsWindow: Bool) {
         self.ownsWindow = ownsWindow
         super.init()
     }
