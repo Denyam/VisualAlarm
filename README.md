@@ -9,8 +9,12 @@ A cross-platform SwiftUI alarm app. Scheduled alarms play a sound and flicker sc
 
 ## Requirements
 
-- iOS 18.6+ / macOS 14.6+
+- iOS 15.5+ / macOS 10.15+
 - Xcode 26+
+
+Deployment floors are compile-verified against the current SDK; runtime testing
+covers iOS 15.5 through iOS 26.3 and the host macOS. macOS 10.15 itself is not
+obtainable for runtime testing — see AGENTS.md.
 
 ## Features
 
@@ -65,13 +69,12 @@ xcodebuild -project VisualAlarm.xcodeproj -scheme VisualAlarm \
 
 ```bash
 # macOS
-xcodebuild -project VisualAlarm.xcodeproj -scheme VisualAlarm \
-  -destination 'platform=macOS' -only-testing:VisualAlarmTests test
+xcodebuild -project VisualAlarm.xcodeproj -scheme VisualAlarmTests \
+  -destination 'platform=macOS' test
 
-# iOS Simulator
-xcodebuild -project VisualAlarm.xcodeproj -scheme VisualAlarm \
-  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
-  -only-testing:VisualAlarmTests test
+# iOS Simulator (pick a concrete device id, not a generic destination)
+xcodebuild -project VisualAlarm.xcodeproj -scheme VisualAlarmTests \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test
 ```
 
 ## License
