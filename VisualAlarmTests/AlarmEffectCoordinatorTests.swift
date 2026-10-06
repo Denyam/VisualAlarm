@@ -27,25 +27,40 @@ struct AlarmEffectCoordinatorTests {
 
         let alarm = Alarm(hour: 12, minute: 0)
 
-        // Rapidly start/stop 50 times - verify brightness restored after each cycle
+        // Rapidly start/stop 50 times - verify the original-brightness
+        // snapshot survives every cycle. The flicker task runs
+        // unsynchronized with the test, so a "during" read accepts either
+        // the snapshot (task not started yet) or a flicker value, and the
+        // after-stop read waits for the cancelled task's restore to finish.
         for i in 0..<50 {
             await coordinator.start(for: alarm)
-            let brightnessDuringEffect = coordinator.currentBrightness
             let originalSnapshot = coordinator.snapshotBrightness
-            if brightnessDuringEffect != originalSnapshot {
-                print("FAIL Cycle \(i) during: brightness=\(brightnessDuringEffect), original=\(String(describing: originalSnapshot)), pending=\(String(describing: coordinator.pendingBrightnessForTest)), effectTask=\(coordinator.currentEffectTask != nil)")
-            }
-            #expect(brightnessDuringEffect == originalSnapshot, "Cycle \(i): brightness \(brightnessDuringEffect) != original \(String(describing: originalSnapshot))")
-            
+            #expect(
+                originalSnapshot == 0.5,
+                "Cycle \(i): snapshot \(String(describing: originalSnapshot)) != 0.5"
+            )
+
+            let brightnessDuringEffect = coordinator.currentBrightness
+            let validStates: Set<CGFloat> = [0.5, 1.0, 0.01]
+            #expect(
+                validStates.contains(brightnessDuringEffect),
+                "Cycle \(i): brightness \(brightnessDuringEffect) is neither original nor a flicker value"
+            )
+
             coordinator.stop()
-            let bAfterStop = coordinator.currentBrightness
-            let sAfterStop = coordinator.snapshotBrightness
-            if bAfterStop != originalSnapshot {
-                print("FAIL Cycle \(i) after stop: brightness=\(bAfterStop), original=\(String(describing: originalSnapshot)), pending=\(String(describing: coordinator.pendingBrightnessForTest)), effectTask=\(coordinator.currentEffectTask != nil)")
+
+            // Await the cancelled effect task directly: restore runs on that
+            // task, and only once it completes is brightness guaranteed back
+            // to the snapshot (a fixed sleep can't order this — the task may
+            // not even have started when stop() cancelled it).
+            if let cancelledTask = coordinator.currentEffectTask {
+                await cancelledTask.value
             }
-            #expect(bAfterStop == originalSnapshot, "Cycle \(i) after stop: brightness \(bAfterStop) != original \(String(describing: originalSnapshot))")
-            
-            try await Task.sleep(nanoseconds: 1 * 1_000_000)
+            let bAfterStop = coordinator.currentBrightness
+            #expect(
+                bAfterStop == originalSnapshot,
+                "Cycle \(i) after stop: brightness \(bAfterStop) != original \(String(describing: originalSnapshot))"
+            )
         }
     }
 
