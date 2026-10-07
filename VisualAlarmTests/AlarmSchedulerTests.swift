@@ -93,7 +93,7 @@ struct AlarmSchedulerTests {
 
         await scheduler.step { duration in
             slept.record(duration)
-            clock.advance(by: Double(duration.components.seconds))
+            clock.advance(by: duration)
         }
 
         #expect(fired.count == 0)
@@ -123,7 +123,7 @@ struct AlarmSchedulerTests {
         for _ in 0..<4 where fired.count == 0 {
             await scheduler.step { duration in
                 slept.record(duration)
-                clock.advance(by: Double(duration.components.seconds))
+                clock.advance(by: duration)
             }
         }
 
@@ -274,9 +274,9 @@ private final class SleepRecorder: @unchecked Sendable {
     private let lock = NSLock()
     private(set) var durations: [Double] = []
 
-    func record(_ duration: Duration) {
+    func record(_ seconds: TimeInterval) {
         lock.lock()
-        durations.append(Double(duration.components.seconds))
+        durations.append(seconds)
         lock.unlock()
     }
 }

@@ -37,9 +37,13 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
 
 ## Conventions
 
-- Timers/scheduling/effects: Swift Concurrency only (`Task.sleep` +
-  `ContinuousClock`, sleep chunks ≤ 30 s, cancellable Tasks). Never
-  `DispatchSourceTimer` or `Timer` for scheduling or effects.
+- Timers/scheduling/effects: Swift Concurrency only (sleep chunks ≤ 30 s,
+  cancellable Tasks, `Task.sleep(seconds:)` through the injected sleeper seam
+  in `FlickerEffectController` / `AlarmScheduler.step(sleep:)`). NEVER
+  `Duration`/`Clock`/`ContinuousClock`/`Task.sleep(for:)` — they require
+  macOS 13+ / iOS 16+, above the macOS 10.15 / iOS 15.5 deployment floors
+  (use plain `TimeInterval` seconds instead). Never `DispatchSourceTimer` or
+  `Timer` for scheduling or effects.
 - Platform splits via `#if os(...)` or synchronized-folder platform filters
   (`VisualAlarm/BrightnessController.swift` is currently iOS-only).
 - Restore original brightness/torch state when an alarm stops.
@@ -54,12 +58,43 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
   `xcodebuild -project VisualAlarm.xcodeproj -scheme VisualAlarm -destination 'platform=macOS' build`
 - Build (iOS Simulator):
   `xcodebuild -project VisualAlarm.xcodeproj -scheme VisualAlarm -destination 'generic/platform=iOS Simulator' build`
-- Unit tests: `xcodebuild test` with schemes created in PLAN.md step 3
-  (concrete simulator picked at test time).
+- Unit tests: `xcodebuild test -project VisualAlarm.xcodeproj -scheme
+  VisualAlarmTests -destination '<dest>'` — `-scheme VisualAlarm` has NO test
+  action configured. Destinations: `platform=macOS`, or
+  `platform=iOS Simulator,id=<uuid>` (concrete device; generic destinations
+  cannot run tests).
+- Gate policy: at every step gate run the FULL matrix — macOS destination,
+  iOS 15.5 simulator (iPhone 13), iOS 26.3 simulator. macOS 10.15 itself is
+  compile-time verification ONLY (runtime not obtainable — documented gap).
 
 ## Gotchas
 
 <!-- Append durable discoveries here (signing quirks, IOKit behavior, …) -->
+
+### Old-OS floor: macOS 10.15 / iOS 15.5 (feature/old-os-targets)
+- **Known gap**: macOS 10.15 runtime is unobtainable; the mac floor is
+  compile-verified only. Runtime coverage = iOS 15.5 + iOS 26.3 + host macOS.
+- Swift API floors hit while lowering targets: `Image(systemName:)` and
+  `ToolbarItemPlacement` are macOS 11+ (see `VASwiftUI.swift` shims:
+  `VASymbolImage`, `vaToolbarItem`, `vaNavigationTitle`, `vaSafeAreaInset`,
+  `VAStateObject`, …); `overlay(alignment:content:)` is macOS 12+ (use
+  `overlay(_:alignment:)`); `navigationBarTitle` and `StackNavigationViewStyle`
+  are iOS-only; `safeAreaInset` takes `VerticalEdge` on BOTH platforms.
+- Swift Testing cannot attach `@Test` to `@available`-gated suites/functions —
+  use in-body `guard #available(macOS 13.0, *) else { return }`.
+- Default-argument expressions are always `nonisolated` — a `@MainActor`
+  type's default args must not call isolated methods (use a convenience
+  `init()` instead of default params).
+- Login-item registration has two backends behind `AgentRegistering`:
+  `SMAppServiceRegistrar` (macOS 13+, async status) and `LoginItemRegistrar`
+  (`SMLoginItemSetEnabled`, pre-13). The legacy backend gives no status
+  feedback, so registration intent is persisted in UserDefaults.
+- `AlarmEffectCoordinatorTests/rapidStartStopDoesNotRace` failed by sleeping
+  a fixed interval after `stop()`: the cancelled flicker task may not have
+  STARTED yet, so the read caught `onPhase`'s 1.0 before `restore()`. Sleeps
+  cannot order task completion — await `coordinator.currentEffectTask?.value`
+  (the task is only nilled by a MainActor cleanup task, so it is still set
+  synchronously right after `stop()`).
 
 ### Spike 2026-08-22: IOKit brightness under App Sandbox (`spike/`, rerun via `spike/run_spike.sh`)
 - `IODisplayGet/SetFloatParameter` with `kIODisplayBrightnessKey`

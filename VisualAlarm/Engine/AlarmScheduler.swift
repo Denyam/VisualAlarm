@@ -92,7 +92,7 @@ final class AlarmScheduler: @unchecked Sendable {
     /// One loop iteration: evaluate, fire what is due or sleep toward the
     /// next instant using the provided async sleep.
     func step(
-        sleep: @Sendable (Duration) async throws -> Void
+        sleep: @Sendable (TimeInterval) async throws -> Void
     ) async {
         let currentTime = now()
 
@@ -103,7 +103,7 @@ final class AlarmScheduler: @unchecked Sendable {
         case .waitUntil(let target):
             let remaining = max(0, target.timeIntervalSince(currentTime))
             let bounded = min(remaining, maxChunk)
-            try? await sleep(Duration.seconds(bounded))
+            try? await sleep(bounded)
         }
     }
 
@@ -111,8 +111,8 @@ final class AlarmScheduler: @unchecked Sendable {
     func run() -> Task<Void, Never> {
         Task {
             while !Task.isCancelled {
-                await step { duration in
-                    try await Task.sleep(for: duration, clock: .continuous)
+                await step { seconds in
+                    try await Task.sleep(seconds: seconds)
                 }
             }
         }

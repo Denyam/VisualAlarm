@@ -51,7 +51,7 @@ struct DarwinNotificationCenterTests {
     ) async throws {
         let deadline = Date().addingTimeInterval(seconds)
         while counter.value < minimum && Date() < deadline {
-            try await Task.sleep(for: .milliseconds(5))
+            try await Task.sleep(nanoseconds: 5 * 1_000_000)
         }
         #expect(counter.value >= minimum)
     }
@@ -70,7 +70,7 @@ struct DarwinNotificationCenterTests {
 
         let deadline = Date().addingTimeInterval(2)
         while counter.value == 0 && Date() < deadline {
-            try await Task.sleep(for: .milliseconds(10))
+            try await Task.sleep(nanoseconds: 10 * 1_000_000)
         }
 
         #expect(counter.value >= 1)
@@ -87,7 +87,7 @@ struct DarwinNotificationCenterTests {
         token.cancel()
 
         center.post(.alarmShouldFire)
-        try await Task.sleep(for: .milliseconds(200))
+        try await Task.sleep(nanoseconds: 200 * 1_000_000)
 
         #expect(counter.value == 0)
     }
@@ -104,7 +104,7 @@ struct DarwinNotificationCenterTests {
         token = nil
 
         center.post(.alarmsDidChange)
-        try await Task.sleep(for: .milliseconds(200))
+        try await Task.sleep(nanoseconds: 200 * 1_000_000)
 
         #expect(counter.value == 0)
     }

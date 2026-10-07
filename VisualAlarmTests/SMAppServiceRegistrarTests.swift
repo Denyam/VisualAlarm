@@ -12,30 +12,41 @@ import Testing
 @MainActor
 struct SMAppServiceRegistrarTests {
 
+    // Swift Testing cannot attach @Test to availability-gated functions, so
+    // each test skips itself below macOS 13 instead of being gated.
     @Test func mapsEverySystemStatus() {
+        guard #available(macOS 13.0, *) else { return }
         #expect(
-            SMAppServiceRegistrar.RegistrationStatus.map(.notRegistered)
+            AgentRegistrationStatus.map(.notRegistered)
                 == .notRegistered
         )
         #expect(
-            SMAppServiceRegistrar.RegistrationStatus.map(.enabled)
+            AgentRegistrationStatus.map(.enabled)
                 == .enabled
         )
         #expect(
-            SMAppServiceRegistrar.RegistrationStatus.map(.requiresApproval)
+            AgentRegistrationStatus.map(.requiresApproval)
                 == .requiresApproval
         )
         #expect(
-            SMAppServiceRegistrar.RegistrationStatus.map(.notFound)
+            AgentRegistrationStatus.map(.notFound)
                 == .unknown("notFound")
         )
     }
 
     @Test func loginItemsDeepLinkIsValid() {
+        guard #available(macOS 13.0, *) else { return }
         #expect(
             SMAppServiceRegistrar.loginItemsSettingsURL?.scheme
                 == "x-apple.systempreferences"
         )
+    }
+
+    @Test func factoryReturnsSMAppServiceRegistrarWhenAvailable() {
+        guard #available(macOS 13.0, *) else { return }
+        let registrar = AgentRegistrationFactory.make(smAppServiceAvailable: true)
+        #expect(registrar is SMAppServiceRegistrar)
+        #expect(registrar.settingsURL?.scheme == "x-apple.systempreferences")
     }
 }
 #endif
