@@ -22,18 +22,21 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
 ## Architecture (macOS)
 
 - `VisualAlarm.app` — SwiftUI UI; owns registration + alarm store writes.
-- `Contents/Library/LoginItems/VisualAlarmAgent.app` — resident scheduler
-  agent (`RunAtLoad` + `KeepAlive`), launched by launchd via
+- `Contents/XPCServices/VisualAlarmAgentXPC.xpc` — resident scheduler, kept
+  alive by launchd (`RunAtLoad` + `KeepAlive`) via
   `SMAppService.agent(plistName:)`. Static plist ships inside the app bundle at
   `Contents/Library/LaunchAgents/co.denis.VisualAlarm.agent.plist`; its
-  `BundleProgram` path points into the nested agent bundle (sandboxed
-  executables cannot be bare binaries — see Gotchas).
-- `Contents/Library/LoginItems/VisualAlarmRunner.app` — LSUIElement alarm
-  window: system-sound loop, brightness flicker, Stop button (rings until
-  stopped), single-instance guard.
-- IPC: App Group container `group.ETFKU52LQ6.co.denis.VisualAlarm.shared`
-  holds `alarms.json`; change/fire signaling via Darwin notifications. No
-  launch arguments.
+  `BundleProgram` path points into the nested `.xpc` bundle (sandboxed
+  executables cannot be bare binaries — see Gotchas). Runs independently of the
+  main app so alarms still fire while the app is closed.
+- `Contents/XPCServices/VisualAlarmRunnerXPC.xpc` — LSUIElement alarm window:
+  system-sound loop, brightness flicker, Stop button (rings until stopped).
+  Started on demand over XPC and torn down when its last connection closes.
+- IPC: typed `@objc` protocols in `VisualAlarm/XPC/VisualAlarmXPC.swift`,
+  carried by `NSXPCConnection`. Alarms cross the boundary as JSON-encoded
+  `Data` (`XPCAlarm`) because Swift structs cannot be `@objc` parameters.
+  Change signaling between app and agent remains Darwin notifications. No launch
+  arguments.
 
 ## Conventions
 
@@ -70,6 +73,34 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
 ## Gotchas
 
 <!-- Append durable discoveries here (signing quirks, IOKit behavior, …) -->
+
+### Signing: ad-hoc + App Sandbox aborts at launch (verified 2026-10-13)
+- `codesign --sign -` (ad-hoc, i.e. Xcode Team "None") **plus**
+  `com.apple.security.app-sandbox` makes the process die with **SIGABRT before
+  `main`**. Reproduced with never-before-seen bundle IDs, from `/tmp` and from
+  the repo, on macOS 15.8.1 / Xcode 16.4. The abort is in process init, so no
+  `print`/stderr output appears. Measured via `spike/run_appgroup_spike.sh`.
+- Ad-hoc signing WITHOUT the sandbox entitlement runs fine — the entitlement,
+  not ad-hoc signing per se, is the trigger. Adding
+  `com.apple.security.application-groups` changes nothing.
+- This **supersedes** the older spike note below claiming the sandboxed spike
+  "WORKS with ad-hoc signing"; that result no longer reproduces on this host.
+- `security find-identity -v -p codesigning` currently reports **0 valid
+  identities**, so Team "None" is the only thing Xcode can sign with here.
+- Consequence: the sandboxed build in this repo is expected to **fail to
+  launch** until a real signing identity is restored. Verified only by
+  `swiftc -typecheck`; `xcodebuild` SIGILLs on this host even on an untouched
+  checkout (see below), so no compiled/launch verification was possible.
+- XPC services do **not** substitute for App Groups: each sandboxed process
+  gets a container keyed by its own bundle ID, so an embedded `.xpc` cannot see
+  the app's `alarms.json`. XPC provides messaging, not shared storage.
+
+### xcodebuild is unusable on this host (2026-10-13)
+- `xcodebuild ... build` exits **132 (SIGILL)** after printing only the
+  invocation line, on an **unmodified** `git worktree` of `HEAD`. Not caused by
+  project changes. `swiftc`/`swift-frontend` work normally, so use
+  `swiftc -typecheck -sdk $(xcrun --show-sdk-path --sdk macosx) -target
+  x86_64-apple-macos10.15 <files>` to verify compilation until this is fixed.
 
 ### Old-OS floor: macOS 10.15 / iOS 15.5 (feature/old-os-targets)
 - **Known gap**: macOS 10.15 runtime is unobtainable; the mac floor is
@@ -125,6 +156,10 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
   (`DispatchQueue.main.async`) — earlier requests are dropped.
 
 ### App Group naming (step 6 + device-build fix)
+- NOTE: as of the XPC refactor the `application-groups` entitlement is REMOVED
+  from `Support/VisualAlarm.entitlements`, so none of the below currently
+  applies. Retained for reference in case the entitlement comes back (it is
+  the only sandbox-sanctioned way to share `alarms.json` across processes).
 - A BARE (non-team-prefixed) App Group ID + no provisioning profile makes
   macOS 15+ prompt "access data from other apps" on EVERY launch, and the
   invisible prompt hangs xcodebuild test hosts ("test runner hung before
@@ -143,6 +178,13 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
   manually) or resident agents go stale.
 
 ### Embedding mac helpers in a multiplatform target (step 3 findings)
+- SUPERSEDED by the XPC refactor: the app no longer embeds separate `.app`
+  helpers. It now embeds two `.xpc` bundles via a `CopyFiles` phase
+  ("Embed XPC Services", `dst_subfolder_spec = plug_ins` →
+  `Contents/XPCServices`), which Xcode filters per-platform correctly, plus
+  "Embed Agent Plist" (`absolute_path` → `Contents/Library/LaunchAgents`).
+  The old Run Script phase ("Embed Helpers (macOS only)") and its `VA_HELPER_DST`
+  / `VA_PLIST_DST` settings were deleted. Retained for reference:
 - A single multiplatform target cannot use CopyFiles phases for macOS-only
   helpers: on iOS builds `ValidateEmbeddedBinary` fails ("target is built for
   iOS but contains embedded content built for macOS") even if the phase
@@ -156,6 +198,9 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
   BSD `cp -R` merges INTO an existing directory, silently leaving stale
   binaries embedded. Phase also sets `alwaysOutOfDate = 1` so incremental
   builds can never skip re-embedding.
+- `NSXPCListener.delegate` is a WEAK reference: the delegate must be held in a
+  strong top-level `let`, or it deallocates immediately and every incoming
+  connection is rejected.
 
 ### iOS notification scheduling + effects (step 7)
 - `@Sendable` closures cannot mutate captured protocol existentials in Swift 5:

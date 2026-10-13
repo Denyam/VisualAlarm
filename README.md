@@ -39,10 +39,18 @@ obtainable for runtime testing — see AGENTS.md.
 | Component | Role |
 |-----------|------|
 | `VisualAlarm.app` | SwiftUI UI, alarm store, registration |
-| `VisualAlarmAgent.app` | macOS resident scheduler (LaunchAgent) |
-| `VisualAlarmRunner.app` | macOS alarm window (sound, flicker, Stop) |
+| `VisualAlarmAgentXPC.xpc` | macOS resident scheduler (launchd LaunchAgent, kept alive at login) |
+| `VisualAlarmRunnerXPC.xpc` | macOS alarm window (sound, flicker, Stop), started on demand |
 
-Shared data lives in an App Group container (`alarms.json`), signaled via Darwin notifications.
+The helpers are XPC services embedded in `Contents/XPCServices`. They talk to the app
+through typed `@objc` protocols (`VisualAlarm/XPC/VisualAlarmXPC.swift`); alarm change
+signaling between app and agent still uses Darwin notifications.
+
+> **Known limitation on this build:** the App Group entitlement has been removed so the
+> app can be signed ad-hoc. Under App Sandbox each process gets a container keyed by its
+> own bundle ID, so the helpers do not currently observe the app's `alarms.json` while
+> sandboxed. Restoring cross-process state requires a real signing identity and the
+> `application-groups` entitlement back.
 
 ## iOS Background Limitations
 

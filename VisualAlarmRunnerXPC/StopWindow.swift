@@ -11,6 +11,9 @@ import Foundation
 final class StopWindow: NSObject, NSWindowDelegate {
     let window: NSWindow
 
+    /// Invoked when the user presses Stop.
+    var onStop: (() -> Void)?
+
     init(alarmLabel: String) {
         let size = NSSize(width: 320, height: 140)
         var contentRect = NSRect(origin: .zero, size: size)
@@ -78,6 +81,12 @@ final class StopWindow: NSObject, NSWindowDelegate {
     }
 
     @objc private func stopClicked() {
-        NSApp.terminate(nil)
+        onStop?()
+    }
+
+    /// Closing the window with the titlebar button also stops the alarm.
+    func windowShouldClose(_ sender: NSWindow) -> Bool {
+        onStop?()
+        return true
     }
 }

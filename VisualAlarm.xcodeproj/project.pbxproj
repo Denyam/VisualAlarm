@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0C41F739E08CEE8CEBC606A3 /* VisualAlarmAgentXPC in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = A1CBCAB48A843B9A631586CE /* VisualAlarmAgentXPC */; };
+		1CEB280BA08379D53DFB1E5C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2D32E58004B9CF7B4428E60 /* Cocoa.framework */; };
+		1FEFB26EB8695DBAAB55C537 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2D32E58004B9CF7B4428E60 /* Cocoa.framework */; };
+		4449AA479040996B6175BE62 /* co.denis.VisualAlarm.agent.plist in Embed Agent Plist */ = {isa = PBXBuildFile; fileRef = C0DE000000000000000000CA /* co.denis.VisualAlarm.agent.plist */; };
+		B0A484947FE81C9C6D531242 /* VisualAlarmRunnerXPC in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 02E02A619F0E86EC24502CD7 /* VisualAlarmRunnerXPC */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		3909CF8B302F70A200912A27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,70 +29,137 @@
 			remoteGlobalIDString = 3909CF7C302F709E00912A27;
 			remoteInfo = VisualAlarm;
 		};
-		C0DE000000000000000000C1 /* PBXContainerItemProxy */ = {
+		7DD01BBE54C5C1D3E7FC7BD0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3909CF75302F709E00912A27 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = C0DE000000000000000000A3;
-			remoteInfo = VisualAlarmAgent;
+			remoteGlobalIDString = 7BEF59B989CB99B2A4E0FBF2;
+			remoteInfo = VisualAlarmRunnerXPC;
 		};
-		C0DE000000000000000000C3 /* PBXContainerItemProxy */ = {
+		F8D3D33394E6AB68A6F64C56 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3909CF75302F709E00912A27 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = C0DE000000000000000000B3;
-			remoteInfo = VisualAlarmRunner;
+			remoteGlobalIDString = 73A359F78139B1D40D1BBACE;
+			remoteInfo = VisualAlarmAgentXPC;
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		9BFF986F6261B981F20FFD77 /* Embed Agent Plist */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LaunchAgents;
+			dstSubfolderSpec = 0;
+			files = (
+				4449AA479040996B6175BE62 /* co.denis.VisualAlarm.agent.plist in Embed Agent Plist */,
+			);
+			name = "Embed Agent Plist";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FFBB157A99EB52607769D2C7 /* Embed XPC Services */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/XPCServices;
+			dstSubfolderSpec = 13;
+			files = (
+				0C41F739E08CEE8CEBC606A3 /* VisualAlarmAgentXPC in Embed XPC Services */,
+				B0A484947FE81C9C6D531242 /* VisualAlarmRunnerXPC in Embed XPC Services */,
+			);
+			name = "Embed XPC Services";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		02E02A619F0E86EC24502CD7 /* VisualAlarmRunnerXPC */ = {isa = PBXFileReference; includeInIndex = 0; path = VisualAlarmRunnerXPC; sourceTree = BUILT_PRODUCTS_DIR; };
 		3909CF7D302F709E00912A27 /* VisualAlarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3909CF8A302F70A200912A27 /* VisualAlarmTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VisualAlarmTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3909CF94302F70A200912A27 /* VisualAlarmUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VisualAlarmUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1CBCAB48A843B9A631586CE /* VisualAlarmAgentXPC */ = {isa = PBXFileReference; includeInIndex = 0; path = VisualAlarmAgentXPC; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2D32E58004B9CF7B4428E60 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		C0DE000000000000000000A2 /* VisualAlarmAgent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualAlarmAgent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0DE000000000000000000B2 /* VisualAlarmRunner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualAlarmRunner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0DE000000000000000000CA /* co.denis.VisualAlarm.agent.plist */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text.plist.xml; path = co.denis.VisualAlarm.agent.plist; sourceTree = "<group>"; };
-		C0DE000000000000000000CC /* VisualAlarm.entitlements */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text.plist.entitlements; name = VisualAlarm.entitlements; path = Support/VisualAlarm.entitlements; sourceTree = "<group>"; };
+		C0DE000000000000000000CC /* VisualAlarm.entitlements */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text.plist.entitlements; path = VisualAlarm.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		3909CFAB30320C4100912A27 /* Exceptions for "VisualAlarm" folder in "VisualAlarm" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			platformFiltersByRelativePath = {
-				AppDelegate.swift = (macos, );
-				Engine/AlarmEffectCoordinator.swift = (ios, );
-				Engine/BrightnessController.swift = (ios, );
-				Engine/HapticSignaling.swift = (ios, );
-				Engine/IOSAlarmScheduler.swift = (ios, );
-				Engine/MacBrightnessController.swift = (macos, );
-				Engine/MacBrightnessControlling.swift = (macos, );
-				Engine/NotificationDelegate.swift = (ios, );
-				Engine/NotificationScheduling.swift = (ios, );
-				Engine/RunnerLaunching.swift = (macos, );
-				Engine/SMAppServiceRegistrar.swift = (macos, );
-				Engine/TorchController.swift = (ios, );
-				Engine/WorkspaceRunnerLauncher.swift = (macos, );
-				MaintenanceHooks.swift = (macos, );
-				View/AgentRegistrarModel.swift = (macos, );
-				View/AgentStatusBanner.swift = (macos, );
-				View/AlarmFiringOverlay.swift = (ios, );
+				AppDelegate.swift = (
+					macos,
+				);
+				Engine/AlarmEffectCoordinator.swift = (
+					ios,
+				);
+				Engine/BrightnessController.swift = (
+					ios,
+				);
+				Engine/HapticSignaling.swift = (
+					ios,
+				);
+				Engine/IOSAlarmScheduler.swift = (
+					ios,
+				);
+				Engine/MacBrightnessController.swift = (
+					macos,
+				);
+				Engine/MacBrightnessControlling.swift = (
+					macos,
+				);
+				Engine/NotificationDelegate.swift = (
+					ios,
+				);
+				Engine/NotificationScheduling.swift = (
+					ios,
+				);
+				Engine/RunnerLaunching.swift = (
+					macos,
+				);
+				Engine/SMAppServiceRegistrar.swift = (
+					macos,
+				);
+				Engine/TorchController.swift = (
+					ios,
+				);
+				Engine/WorkspaceRunnerLauncher.swift = (
+					macos,
+				);
+				MaintenanceHooks.swift = (
+					macos,
+				);
+				View/AgentRegistrarModel.swift = (
+					macos,
+				);
+				View/AgentStatusBanner.swift = (
+					macos,
+				);
+				View/AlarmFiringOverlay.swift = (
+					ios,
+				);
 			};
 			target = 3909CF7C302F709E00912A27 /* VisualAlarm */;
 		};
-		C0DE000000000000000000E1 /* Exceptions for "VisualAlarm" folder in "VisualAlarmRunner" target */ = {
+		74433532F4243475415E36C7 /* Exceptions for "VisualAlarm" folder in "VisualAlarmRunnerXPC" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AppDelegate.swift,
 				Assets.xcassets,
+				MaintenanceHooks.swift,
+				VisualAlarmApp.swift,
+				main.swift,
+				Engine/AgentXPCClient.swift,
+				Engine/RunnerXPCClient.swift,
 				Engine/AlarmEffectCoordinator.swift,
 				Engine/BrightnessController.swift,
 				Engine/HapticSignaling.swift,
 				Engine/IOSAlarmScheduler.swift,
 				Engine/NotificationDelegate.swift,
 				Engine/NotificationScheduling.swift,
+				Engine/SMAppServiceRegistrar.swift,
 				Engine/TorchController.swift,
-				main.swift,
-				MaintenanceHooks.swift,
 				View/AgentRegistrarModel.swift,
 				View/AgentStatusBanner.swift,
 				View/AlarmEditorModel.swift,
@@ -94,27 +169,29 @@
 				View/ContentView.swift,
 				View/NextFirePreview.swift,
 				View/WeekdayChips.swift,
-				VisualAlarmApp.swift,
 			);
-			target = C0DE000000000000000000B3 /* VisualAlarmRunner */;
+			target = 7BEF59B989CB99B2A4E0FBF2 /* VisualAlarmRunnerXPC */;
 		};
-		C0DE000000000000000000E2 /* Exceptions for "VisualAlarm" folder in "VisualAlarmAgent" target */ = {
+		ED39E62B327E26DC0F761D5D /* Exceptions for "VisualAlarm" folder in "VisualAlarmAgentXPC" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AppDelegate.swift,
 				Assets.xcassets,
+				MaintenanceHooks.swift,
+				VisualAlarmApp.swift,
+				main.swift,
+				Engine/AgentXPCClient.swift,
+				Engine/RunnerXPCClient.swift,
 				Engine/AlarmEffectCoordinator.swift,
 				Engine/BrightnessController.swift,
-				Engine/FlickerEffectController.swift,
 				Engine/HapticSignaling.swift,
 				Engine/IOSAlarmScheduler.swift,
 				Engine/MacBrightnessController.swift,
 				Engine/MacBrightnessControlling.swift,
 				Engine/NotificationDelegate.swift,
 				Engine/NotificationScheduling.swift,
+				Engine/SMAppServiceRegistrar.swift,
 				Engine/TorchController.swift,
-				main.swift,
-				MaintenanceHooks.swift,
 				View/AgentRegistrarModel.swift,
 				View/AgentStatusBanner.swift,
 				View/AlarmEditorModel.swift,
@@ -124,41 +201,48 @@
 				View/ContentView.swift,
 				View/NextFirePreview.swift,
 				View/WeekdayChips.swift,
-				VisualAlarmApp.swift,
 			);
-			target = C0DE000000000000000000A3 /* VisualAlarmAgent */;
+			target = 73A359F78139B1D40D1BBACE /* VisualAlarmAgentXPC */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		2A8913B8266A819A1DAB64FF /* VisualAlarmAgentXPC */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			path = VisualAlarmAgentXPC;
+			sourceTree = "<group>";
+		};
 		3909CF7F302F709E00912A27 /* VisualAlarm */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				3909CFAB30320C4100912A27 /* Exceptions for "VisualAlarm" folder in "VisualAlarm" target */,
-				C0DE000000000000000000E2 /* Exceptions for "VisualAlarm" folder in "VisualAlarmAgent" target */,
-				C0DE000000000000000000E1 /* Exceptions for "VisualAlarm" folder in "VisualAlarmRunner" target */,
+				ED39E62B327E26DC0F761D5D /* Exceptions for "VisualAlarm" folder in "VisualAlarmAgentXPC" target */,
+				74433532F4243475415E36C7 /* Exceptions for "VisualAlarm" folder in "VisualAlarmRunnerXPC" target */,
 			);
 			path = VisualAlarm;
 			sourceTree = "<group>";
 		};
 		3909CF8D302F70A200912A27 /* VisualAlarmTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = VisualAlarmTests;
 			sourceTree = "<group>";
 		};
 		3909CF97302F70A200912A27 /* VisualAlarmUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = VisualAlarmUITests;
 			sourceTree = "<group>";
 		};
-		C0DE000000000000000000A1 /* VisualAlarmAgent */ = {
+		96CA23895C94F435143C207B /* VisualAlarmRunnerXPC */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = VisualAlarmAgent;
-			sourceTree = "<group>";
-		};
-		C0DE000000000000000000B1 /* VisualAlarmRunner */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = VisualAlarmRunner;
+			exceptions = (
+			);
+			path = VisualAlarmRunnerXPC;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -185,10 +269,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C0DE000000000000000000B5 /* Frameworks */ = {
+		7CDFDF358563118F691F4483 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FEFB26EB8695DBAAB55C537 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FD148D58D07AC0AF8640F873 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1CEB280BA08379D53DFB1E5C /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,12 +292,13 @@
 			isa = PBXGroup;
 			children = (
 				3909CF7F302F709E00912A27 /* VisualAlarm */,
-				C0DE000000000000000000A1 /* VisualAlarmAgent */,
-				C0DE000000000000000000B1 /* VisualAlarmRunner */,
 				3909CF8D302F70A200912A27 /* VisualAlarmTests */,
 				3909CF97302F70A200912A27 /* VisualAlarmUITests */,
 				C0DE000000000000000000CB /* Support */,
 				3909CF7E302F709E00912A27 /* Products */,
+				7F6A8E42161558926B16A12B /* Frameworks */,
+				2A8913B8266A819A1DAB64FF /* VisualAlarmAgentXPC */,
+				96CA23895C94F435143C207B /* VisualAlarmRunnerXPC */,
 			);
 			sourceTree = "<group>";
 		};
@@ -216,8 +310,26 @@
 				C0DE000000000000000000B2 /* VisualAlarmRunner.app */,
 				3909CF8A302F70A200912A27 /* VisualAlarmTests.xctest */,
 				3909CF94302F70A200912A27 /* VisualAlarmUITests.xctest */,
+				A1CBCAB48A843B9A631586CE /* VisualAlarmAgentXPC */,
+				02E02A619F0E86EC24502CD7 /* VisualAlarmRunnerXPC */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7F6A8E42161558926B16A12B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B2E7206B315634D38A229B11 /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B2E7206B315634D38A229B11 /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				A2D32E58004B9CF7B4428E60 /* Cocoa.framework */,
+			);
+			name = "OS X";
 			sourceTree = "<group>";
 		};
 		C0DE000000000000000000CB /* Support */ = {
@@ -239,20 +351,19 @@
 				3909CF79302F709E00912A27 /* Sources */,
 				3909CF7A302F709E00912A27 /* Frameworks */,
 				3909CF7B302F709E00912A27 /* Resources */,
-				C0DE000000000000000000D1 /* Embed Helpers (macOS only) */,
+				FFBB157A99EB52607769D2C7 /* Embed XPC Services */,
+				9BFF986F6261B981F20FFD77 /* Embed Agent Plist */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				C0DE000000000000000000C2 /* PBXTargetDependency */,
-				C0DE000000000000000000C4 /* PBXTargetDependency */,
+				D4DD777FF2BF30AE9311F383 /* PBXTargetDependency */,
+				EE2E6AB37A1754E91E6380B1 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				3909CF7F302F709E00912A27 /* VisualAlarm */,
 			);
 			name = VisualAlarm;
-			packageProductDependencies = (
-			);
 			productName = VisualAlarm;
 			productReference = 3909CF7D302F709E00912A27 /* VisualAlarm.app */;
 			productType = "com.apple.product-type.application";
@@ -274,8 +385,6 @@
 				3909CF8D302F70A200912A27 /* VisualAlarmTests */,
 			);
 			name = VisualAlarmTests;
-			packageProductDependencies = (
-			);
 			productName = VisualAlarmTests;
 			productReference = 3909CF8A302F70A200912A27 /* VisualAlarmTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -297,56 +406,49 @@
 				3909CF97302F70A200912A27 /* VisualAlarmUITests */,
 			);
 			name = VisualAlarmUITests;
-			packageProductDependencies = (
-			);
 			productName = VisualAlarmUITests;
 			productReference = 3909CF94302F70A200912A27 /* VisualAlarmUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		C0DE000000000000000000A3 /* VisualAlarmAgent */ = {
+		73A359F78139B1D40D1BBACE /* VisualAlarmAgentXPC */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C0DE000000000000000000A7 /* Build configuration list for PBXNativeTarget "VisualAlarmAgent" */;
+			buildConfigurationList = 35C7C3FC3A8BD8810E6BE539 /* Build configuration list for PBXNativeTarget "VisualAlarmAgentXPC" */;
 			buildPhases = (
-				C0DE000000000000000000A4 /* Sources */,
-				C0DE000000000000000000A6 /* Resources */,
+				17C64EBC11C522AFCDAF5158 /* Sources */,
+				7CDFDF358563118F691F4483 /* Frameworks */,
+				9B3D88B40CAEE8BD572A8A23 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				3909CF7F302F709E00912A27 /* VisualAlarm */,
-				C0DE000000000000000000A1 /* VisualAlarmAgent */,
+				2A8913B8266A819A1DAB64FF /* VisualAlarmAgentXPC */,
 			);
-			name = VisualAlarmAgent;
-			packageProductDependencies = (
-			);
-			productName = VisualAlarmAgent;
-			productReference = C0DE000000000000000000A2 /* VisualAlarmAgent.app */;
-			productType = "com.apple.product-type.application";
+			name = VisualAlarmAgentXPC;
+			productName = VisualAlarmAgentXPC;
+			productReference = A1CBCAB48A843B9A631586CE /* VisualAlarmAgentXPC */;
+			productType = "com.apple.product-type.xpc-service";
 		};
-		C0DE000000000000000000B3 /* VisualAlarmRunner */ = {
+		7BEF59B989CB99B2A4E0FBF2 /* VisualAlarmRunnerXPC */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C0DE000000000000000000B7 /* Build configuration list for PBXNativeTarget "VisualAlarmRunner" */;
+			buildConfigurationList = 6B9552FEB9FEF9F2C82B36B3 /* Build configuration list for PBXNativeTarget "VisualAlarmRunnerXPC" */;
 			buildPhases = (
-				C0DE000000000000000000B4 /* Sources */,
-				C0DE000000000000000000B5 /* Frameworks */,
-				C0DE000000000000000000B6 /* Resources */,
+				676ED1FBAF25273A6BD54E2B /* Sources */,
+				FD148D58D07AC0AF8640F873 /* Frameworks */,
+				6F0289A272CDA5982FD1037D /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				3909CF7F302F709E00912A27 /* VisualAlarm */,
-				C0DE000000000000000000B1 /* VisualAlarmRunner */,
+				96CA23895C94F435143C207B /* VisualAlarmRunnerXPC */,
 			);
-			name = VisualAlarmRunner;
-			packageProductDependencies = (
-			);
-			productName = VisualAlarmRunner;
-			productReference = C0DE000000000000000000B2 /* VisualAlarmRunner.app */;
-			productType = "com.apple.product-type.application";
+			name = VisualAlarmRunnerXPC;
+			productName = VisualAlarmRunnerXPC;
+			productReference = 02E02A619F0E86EC24502CD7 /* VisualAlarmRunnerXPC */;
+			productType = "com.apple.product-type.xpc-service";
 		};
 /* End PBXNativeTarget section */
 
@@ -392,10 +494,10 @@
 			projectRoot = "";
 			targets = (
 				3909CF7C302F709E00912A27 /* VisualAlarm */,
-				C0DE000000000000000000A3 /* VisualAlarmAgent */,
-				C0DE000000000000000000B3 /* VisualAlarmRunner */,
 				3909CF89302F70A200912A27 /* VisualAlarmTests */,
 				3909CF93302F70A200912A27 /* VisualAlarmUITests */,
+				73A359F78139B1D40D1BBACE /* VisualAlarmAgentXPC */,
+				7BEF59B989CB99B2A4E0FBF2 /* VisualAlarmRunnerXPC */,
 			);
 		};
 /* End PBXProject section */
@@ -422,14 +524,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C0DE000000000000000000A6 /* Resources */ = {
+		6F0289A272CDA5982FD1037D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C0DE000000000000000000B6 /* Resources */ = {
+		9B3D88B40CAEE8BD572A8A23 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -438,31 +540,14 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		C0DE000000000000000000D1 /* Embed Helpers (macOS only) */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
+/* Begin PBXSourcesBuildPhase section */
+		17C64EBC11C522AFCDAF5158 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/VisualAlarmAgent.app",
-				"$(BUILT_PRODUCTS_DIR)/VisualAlarmRunner.app",
-				"$(SRCROOT)/Support/co.denis.VisualAlarm.agent.plist",
-			);
-			name = "Embed Helpers (macOS only)";
-			outputPaths = (
-				"$(VA_HELPER_DST)/VisualAlarmAgent.app",
-				"$(VA_HELPER_DST)/VisualAlarmRunner.app",
-				"$(VA_PLIST_DST)/co.denis.VisualAlarm.agent.plist",
-			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "if [ \"$PLATFORM_NAME\" != \"macosx\" ]; then\n\texit 0\nfi\nset -euo pipefail\nmkdir -p \"$VA_HELPER_DST\" \"$VA_PLIST_DST\"\nrm -rf \"$VA_HELPER_DST/VisualAlarmAgent.app\" \"$VA_HELPER_DST/VisualAlarmRunner.app\"\ncp -R \"$BUILT_PRODUCTS_DIR/VisualAlarmAgent.app\" \"$BUILT_PRODUCTS_DIR/VisualAlarmRunner.app\" \"$VA_HELPER_DST/\"\ncp \"$SRCROOT/Support/co.denis.VisualAlarm.agent.plist\" \"$VA_PLIST_DST/\"\n";
 		};
-/* End PBXShellScriptBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
 		3909CF79302F709E00912A27 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -484,14 +569,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C0DE000000000000000000A4 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C0DE000000000000000000B4 /* Sources */ = {
+		676ED1FBAF25273A6BD54E2B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -511,19 +589,45 @@
 			target = 3909CF7C302F709E00912A27 /* VisualAlarm */;
 			targetProxy = 3909CF95302F70A200912A27 /* PBXContainerItemProxy */;
 		};
-		C0DE000000000000000000C2 /* PBXTargetDependency */ = {
+		D4DD777FF2BF30AE9311F383 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C0DE000000000000000000A3 /* VisualAlarmAgent */;
-			targetProxy = C0DE000000000000000000C1 /* PBXContainerItemProxy */;
+			name = VisualAlarmAgentXPC;
+			target = 73A359F78139B1D40D1BBACE /* VisualAlarmAgentXPC */;
+			targetProxy = F8D3D33394E6AB68A6F64C56 /* PBXContainerItemProxy */;
 		};
-		C0DE000000000000000000C4 /* PBXTargetDependency */ = {
+		EE2E6AB37A1754E91E6380B1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C0DE000000000000000000B3 /* VisualAlarmRunner */;
-			targetProxy = C0DE000000000000000000C3 /* PBXContainerItemProxy */;
+			name = VisualAlarmRunnerXPC;
+			target = 7BEF59B989CB99B2A4E0FBF2 /* VisualAlarmRunnerXPC */;
+			targetProxy = 7DD01BBE54C5C1D3E7FC7BD0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		0CED3324F8E250DD736FA57C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = co.denis.VisualAlarm.runner;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
 		3909CF9C302F70A200912A27 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -644,10 +748,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ETFKU52LQ6;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -662,14 +768,18 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = co.denis.VisualAlarm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				REGISTER_APP_GROUPS = YES;
-				SDKROOT = auto;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
@@ -679,10 +789,8 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VA_HELPER_DST = "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Library/LoginItems";
 				"VA_HELPER_DST[sdk=iphoneos*]" = "$(TEMP_DIR)/va-ios-discard/LoginItems";
 				"VA_HELPER_DST[sdk=iphonesimulator*]" = "$(TEMP_DIR)/va-ios-discard/LoginItems";
-				VA_PLIST_DST = "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Library/LaunchAgents";
 				"VA_PLIST_DST[sdk=iphoneos*]" = "$(TEMP_DIR)/va-ios-discard/LaunchAgents";
 				"VA_PLIST_DST[sdk=iphonesimulator*]" = "$(TEMP_DIR)/va-ios-discard/LaunchAgents";
 				XROS_DEPLOYMENT_TARGET = 26.2;
@@ -695,10 +803,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ETFKU52LQ6;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -713,14 +823,18 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = co.denis.VisualAlarm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				REGISTER_APP_GROUPS = YES;
-				SDKROOT = auto;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
@@ -730,10 +844,8 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VA_HELPER_DST = "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Library/LoginItems";
 				"VA_HELPER_DST[sdk=iphoneos*]" = "$(TEMP_DIR)/va-ios-discard/LoginItems";
 				"VA_HELPER_DST[sdk=iphonesimulator*]" = "$(TEMP_DIR)/va-ios-discard/LoginItems";
-				VA_PLIST_DST = "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Library/LaunchAgents";
 				"VA_PLIST_DST[sdk=iphoneos*]" = "$(TEMP_DIR)/va-ios-discard/LaunchAgents";
 				"VA_PLIST_DST[sdk=iphonesimulator*]" = "$(TEMP_DIR)/va-ios-discard/LaunchAgents";
 				XROS_DEPLOYMENT_TARGET = 26.2;
@@ -842,90 +954,74 @@
 			};
 			name = Release;
 		};
-		C0DE000000000000000000A8 /* Debug */ = {
+		3D3456C72EB991EE84259D15 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ETFKU52LQ6;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = co.denis.VisualAlarm.agent;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = macosx;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		C0DE000000000000000000A9 /* Release */ = {
+		96BA9038D08B993EFC053924 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ETFKU52LQ6;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = co.denis.VisualAlarm.agent;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = macosx;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
-		C0DE000000000000000000B8 /* Debug */ = {
+		E457CE5AE7E9E31D4D7D1CBA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ETFKU52LQ6;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = co.denis.VisualAlarm.runner;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = macosx;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		C0DE000000000000000000B9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Support/VisualAlarm.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ETFKU52LQ6;
-				ENABLE_APP_SANDBOX = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_LSUIElement = YES;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = co.denis.VisualAlarm.runner;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = macosx;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -933,6 +1029,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		35C7C3FC3A8BD8810E6BE539 /* Build configuration list for PBXNativeTarget "VisualAlarmAgentXPC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				96BA9038D08B993EFC053924 /* Release */,
+				3D3456C72EB991EE84259D15 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		3909CF78302F709E00912A27 /* Build configuration list for PBXProject "VisualAlarm" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -969,20 +1074,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C0DE000000000000000000A7 /* Build configuration list for PBXNativeTarget "VisualAlarmAgent" */ = {
+		6B9552FEB9FEF9F2C82B36B3 /* Build configuration list for PBXNativeTarget "VisualAlarmRunnerXPC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C0DE000000000000000000A8 /* Debug */,
-				C0DE000000000000000000A9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C0DE000000000000000000B7 /* Build configuration list for PBXNativeTarget "VisualAlarmRunner" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C0DE000000000000000000B8 /* Debug */,
-				C0DE000000000000000000B9 /* Release */,
+				E457CE5AE7E9E31D4D7D1CBA /* Release */,
+				0CED3324F8E250DD736FA57C /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

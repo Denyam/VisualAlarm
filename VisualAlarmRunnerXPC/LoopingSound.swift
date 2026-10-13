@@ -7,7 +7,8 @@ import AppKit
 import Foundation
 
 /// Replays a system sound indefinitely until stopped.
-@MainActor final class LoopingSound: NSObject, NSSoundDelegate {
+@MainActor
+final class LoopingSound: NSObject, NSSoundDelegate {
     private let sound: NSSound?
     private var shouldLoop = true
 
