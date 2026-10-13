@@ -37,6 +37,13 @@ final class MacBrightnessController: MacBrightnessControlling {
     var isSupported: Bool {
         getParam != nil && setParam != nil
     }
+    
+    private static var ioKitHandle: UnsafeMutableRawPointer? = {
+        dlopen(
+            "/System/Library/Frameworks/IOKit.framework/IOKit",
+            RTLD_NOW
+        )
+    }()
 
     init(
         symbolProvider: (String) -> UnsafeMutableRawPointer? =
@@ -53,13 +60,9 @@ final class MacBrightnessController: MacBrightnessControlling {
     }
 
     static func loadSymbol(_ name: String) -> UnsafeMutableRawPointer? {
-        guard
-            let handle = dlopen(
-                "/System/Library/Frameworks/IOKit.framework/IOKit",
-                RTLD_NOW
-            )
-        else { return nil }
-        return dlsym(handle, name)
+        guard let ioKitHandle else { return nil }
+
+        return dlsym(ioKitHandle, name)
     }
 
     /// Snapshots the current brightness of every connected display so that

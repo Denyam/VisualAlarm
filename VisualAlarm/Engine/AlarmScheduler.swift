@@ -12,7 +12,8 @@ import Foundation
 ///
 /// All time flows through injected closures (`now`, `sleep`, `alarms`),
 /// keeping the engine deterministic under test without real sleeping.
-final class AlarmScheduler: @unchecked Sendable {
+@MainActor
+final class AlarmScheduler {
     enum Decision {
         /// An alarm is due: fire it and consume its target instant.
         case fire(alarm: Alarm, target: Date)
@@ -20,9 +21,9 @@ final class AlarmScheduler: @unchecked Sendable {
         case waitUntil(Date)
     }
 
-    private let alarmsProvider: @Sendable () -> [Alarm]
-    private let onFire: @Sendable (Alarm) -> Void
-    private let now: @Sendable () -> Date
+    private let alarmsProvider: @MainActor () -> [Alarm]
+    private let onFire: @MainActor (Alarm) -> Void
+    private let now: @MainActor () -> Date
     private let calendar: Calendar
 
     /// Alarms missed by more than this many seconds are skipped silently.
@@ -36,13 +37,13 @@ final class AlarmScheduler: @unchecked Sendable {
     private let schedulerLock = NSLock()
 
     init(
-        alarms: @escaping @Sendable () -> [Alarm],
-        now: @escaping @Sendable () -> Date = { Date() },
+        alarms: @escaping @MainActor () -> [Alarm],
+        now: @escaping @MainActor () -> Date = { Date() },
         calendar: Calendar = .current,
         graceWindow: TimeInterval = 60,
         maxChunk: TimeInterval = 30,
         startingFrom: Date? = nil,
-        onFire: @escaping @Sendable (Alarm) -> Void
+        onFire: @escaping @MainActor (Alarm) -> Void
     ) {
         self.alarmsProvider = alarms
         self.now = now

@@ -276,9 +276,9 @@ struct VAStateObject<ObjectType: ObservableObject>: DynamicProperty {
 
     var wrappedValue: ObjectType { owner.value }
 
-    var projectedValue: ObservedObject<ObjectType>.Wrapper {
+    lazy var projectedValue: ObservedObject<ObjectType>.Wrapper = {
         ObservedObject(wrappedValue: owner.value).projectedValue
-    }
+    }()
 }
 
 // MARK: - ContentUnavailableView (macOS 14+ / iOS 17+)

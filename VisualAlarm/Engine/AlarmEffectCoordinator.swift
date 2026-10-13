@@ -91,7 +91,7 @@ final class AlarmEffectCoordinator: ObservableObject {
             restore: { [weak self] in
                 _ = torch.setTorch(on: false)
                 guard let self else { return }
-                box.brightness = self.originalBrightness ?? 0.5
+                box.brightness = await self.originalBrightness ?? 0.5
             }
         )
     }

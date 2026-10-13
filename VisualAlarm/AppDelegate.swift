@@ -106,12 +106,12 @@ enum LegacyMenu {
         let editMenu = NSMenu(title: "Edit")
         editMenu.addItem(
             withTitle: "Undo",
-            action: Selector(("undo:")),
+            action: #selector(UndoManager.undo),
             keyEquivalent: "z"
         )
         editMenu.addItem(
             withTitle: "Redo",
-            action: Selector(("redo:")),
+            action: #selector(UndoManager.redo),
             keyEquivalent: "Z"
         )
         editMenu.addItem(NSMenuItem.separator())
