@@ -10,6 +10,11 @@ import Foundation
 
 @MainActor
 final class RunnerXPCClient {
+    /// One connection for the process lifetime: xpcproxy tears the runner
+    /// service down once its last connection closes, which would kill a
+    /// still-ringing alarm window.
+    static let shared = RunnerXPCClient()
+
     private let connection: NSXPCConnection
     private let proxy: AlarmRunnerProtocol
 

@@ -12,7 +12,7 @@ import Foundation
 final class AgentCoordinator: NSObject, NSApplicationDelegate {
     private let store = AlarmStore.shared
     private let darwin = DarwinNotificationCenter.shared
-    private let launcher: any RunnerLaunching = WorkspaceRunnerLauncher()
+    private let launcher: any RunnerLaunching = XPCRunnerLauncher()
     private var scheduler: AlarmScheduler?
     private var loopTask: Task<Void, Never>?
     private var tokens: [DarwinObservationToken] = []

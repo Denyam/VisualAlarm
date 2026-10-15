@@ -32,7 +32,7 @@ struct AlarmRowView: View {
 
             #if os(macOS)
             Button("Test") {
-                WorkspaceRunnerLauncher().launch(firingAlarm: alarm)
+                XPCRunnerLauncher().launch(firingAlarm: alarm)
             }
             .vaBorderedButtonStyle()
             #endif

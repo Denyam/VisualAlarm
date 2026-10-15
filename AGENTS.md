@@ -170,7 +170,7 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
 - `UINotificationFeedbackGenerator.FeedbackType` has `.success`, `.warning`,
   `.error` — NOT `.alert`.
 - iOS-only test files that reference mac-only types (e.g.
-  `WorkspaceRunnerLauncher`) MUST be wrapped in `#if os(macOS)` to compile on
+  `XPCRunnerLauncher`) MUST be wrapped in `#if os(macOS)` to compile on
   the iOS simulator test host.
 - Test files referencing `Alarm` with non-default `id` must place the `id:`
   argument before `hour:` — Swift enforces parameter order even with labeled

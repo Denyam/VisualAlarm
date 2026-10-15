@@ -6,8 +6,8 @@
 #if os(macOS)
 import Foundation
 
-/// Spawns the alarm window process for a due alarm and records what is
-/// firing so the runner can present specifics.
+/// Hands a due (or test) alarm to the runner process so it can present the
+/// alarm window with the alarm's specifics.
 protocol RunnerLaunching {
     func launch(firingAlarm alarm: Alarm)
 }

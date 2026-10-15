@@ -67,7 +67,7 @@
 				Engine/RunnerXPCClient.swift = (macos, );
 				Engine/SMAppServiceRegistrar.swift = (macos, );
 				Engine/TorchController.swift = (ios, );
-				Engine/WorkspaceRunnerLauncher.swift = (macos, );
+				Engine/XPCRunnerLauncher.swift = (macos, );
 				MaintenanceHooks.swift = (macos, );
 				View/AgentRegistrarModel.swift = (macos, );
 				View/AgentStatusBanner.swift = (macos, );
@@ -151,7 +151,7 @@
 				Engine/RunnerLaunching.swift,
 				Engine/SMAppServiceRegistrar.swift,
 				Engine/TorchController.swift,
-				Engine/WorkspaceRunnerLauncher.swift,
+				Engine/XPCRunnerLauncher.swift,
 				main.swift,
 				MaintenanceHooks.swift,
 				View/AgentRegistrarModel.swift,
@@ -187,7 +187,7 @@
 				Engine/SMAppServiceRegistrar.swift,
 				Engine/TaskSleep.swift,
 				Engine/TorchController.swift,
-				Engine/WorkspaceRunnerLauncher.swift,
+				Engine/XPCRunnerLauncher.swift,
 				main.swift,
 				MaintenanceHooks.swift,
 				View/AgentRegistrarModel.swift,
