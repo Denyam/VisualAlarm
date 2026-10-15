@@ -22,6 +22,10 @@ protocol AlarmSchedulerProtocol {
     /// Get all pending alarms (JSON-encoded [Alarm] as Data).
     func getPendingAlarms(reply: @escaping (Data?) -> Void)
 
+    /// Replace the agent's entire alarm list (JSON-encoded [Alarm] as Data).
+    /// The agent persists it — the agent owns alarm storage.
+    func syncAlarms(_ alarmsData: Data, reply: @escaping (Bool) -> Void)
+
     /// Resync the scheduler (e.g., after wake from sleep).
     func resync(reply: @escaping () -> Void)
 }

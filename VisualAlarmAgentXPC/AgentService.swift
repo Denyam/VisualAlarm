@@ -96,6 +96,19 @@ final class AgentService: NSObject, AlarmSchedulerProtocol, NSXPCListenerDelegat
         }
     }
 
+    nonisolated func syncAlarms(_ alarmsData: Data, reply: @escaping (Bool) -> Void) {
+        Task { @MainActor in
+            guard let alarms = XPCRepresentation.decodeAlarms(alarmsData) else {
+                reply(false)
+                return
+            }
+            // Persist into the agent's container; AlarmStore also posts
+            // `.alarmsDidChange`, which wakes the resident scheduler.
+            store.replaceAll(alarms)
+            reply(true)
+        }
+    }
+
     nonisolated func resync(reply: @escaping () -> Void) {
         Task { @MainActor in
             if mode == .resident {

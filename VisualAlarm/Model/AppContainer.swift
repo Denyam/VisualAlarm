@@ -7,12 +7,12 @@
 
 import Foundation
 
-/// Location of the alarm data shared between the main app and the XPC
-/// services embedded in its bundle.
+/// Location of `alarms.json` for the current process.
 ///
-/// The XPC services run inside the app's sandbox, so `Application Support`
-/// resolves to the same container directory in every process — no App Group
-/// entitlement is needed for sharing `alarms.json`.
+/// Inside the App Sandbox every process resolves its own container, so the
+/// app keeps its working copy in the app's container while the agent service
+/// persists its authoritative copy in the agent's container; the app mirrors
+/// its list to the agent over XPC (`AgentAlarmSync`).
 enum AppContainer {
     static let alarmsFilename = "alarms.json"
 

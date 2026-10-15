@@ -15,6 +15,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// that itself on macOS 11+).
     private let ownsWindow: Bool
     private var window: NSWindow?
+    /// Mirrors the alarm list to the agent service, which owns storage.
+    private var alarmAgentSync: AgentAlarmSync?
 
     // Both inits must exist: the SwiftUI delegate adaptor calls plain
     // `init()` (ObjC selector `init`), the Catalina bootstrap passes the flag.
@@ -33,6 +35,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             showWindow()
             LegacyMenu.install()
         }
+
+        // Hand the app's alarms to the agent: it stores them in its own
+        // container and schedules from there. Created here (not in a view)
+        // so the initial store load is pushed exactly once, on both entry
+        // paths (SwiftUI scene and Catalina bootstrap).
+        alarmAgentSync = AgentAlarmSync(store: AlarmStore.shared)
 
         // Maintenance hooks used to hang off `.task` (macOS 12+); the launch
         // callback covers macOS 10.15 as well.

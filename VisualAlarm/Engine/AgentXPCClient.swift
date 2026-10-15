@@ -48,6 +48,18 @@ final class AgentXPCClient {
         }
     }
 
+    /// Replace the agent's stored alarm list (fire-and-forget: the reply only
+    /// carries validation failures, and a dead connection surfaces through the
+    /// proxy's error handler instead).
+    func sync(_ alarms: [Alarm]) {
+        guard let data = XPCRepresentation.encode(alarms) else { return }
+        proxy.syncAlarms(data) { success in
+            if !success {
+                print("AgentXPCClient: agent rejected alarm sync")
+            }
+        }
+    }
+
     func resync() async {
         await withCheckedContinuation { continuation in
             proxy.resync {

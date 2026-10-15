@@ -7,9 +7,11 @@ import Combine
 import Foundation
 import os
 
-/// Owns the alarm list and persists it as JSON inside the app's sandbox
-/// container so that the app and the XPC services embedded in its bundle
-/// observe the same state.
+/// Owns the alarm list and persists it as JSON in `AppContainer.directory` —
+/// the current process's Application Support, i.e. inside its own sandbox
+/// container. The app keeps its working copy here and mirrors it to the
+/// agent over XPC; the agent persists its copy in the agent's container and
+/// schedules from that.
 @MainActor
 final class AlarmStore: ObservableObject {
     static let shared = AlarmStore()
@@ -64,6 +66,14 @@ final class AlarmStore: ObservableObject {
             alarms = []
         }
         return alarms
+    }
+
+    /// Replaces the entire list in one persist. Used when the app hands its
+    /// alarms to the agent over XPC — the agent then schedules from its copy.
+    func replaceAll(_ newAlarms: [Alarm]) {
+        guard newAlarms != alarms else { return }
+        alarms = newAlarms
+        persist()
     }
 
     func upsert(_ alarm: Alarm) {
