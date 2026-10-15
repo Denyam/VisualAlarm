@@ -33,7 +33,10 @@ final class AgentAlarmSync {
         self.client = client
         // Initial push covers the launch-time load…
         client.sync(store.alarms)
-        // …the sink covers every subsequent mutation of the store.
+        // …the sink covers every subsequent mutation of the store. @Published
+        // also replays the current value to this subscriber, so the agent may
+        // receive one duplicate push — `replaceAll`'s equality guard turns
+        // that into a no-op.
         cancellable = store.$alarms.sink { alarms in
             Task { @MainActor in client.sync(alarms) }
         }

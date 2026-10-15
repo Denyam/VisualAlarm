@@ -89,6 +89,33 @@ struct AlarmStoreTests {
         #expect(store.load() == [external])
     }
 
+    @Test func replaceAllSwapsTheWholeListAndPersists() throws {
+        let directory = try makeTemporaryDirectory()
+        let store = AlarmStore(directory: directory, darwin: SilentNotifier())
+        store.upsert(Alarm(label: "Old", hour: 1, minute: 1))
+
+        let fresh = [Alarm(label: "New", hour: 7, minute: 30)]
+        store.replaceAll(fresh)
+
+        #expect(store.alarms == fresh)
+        let reloaded = AlarmStore(directory: directory, darwin: SilentNotifier())
+        #expect(reloaded.alarms == fresh)
+    }
+
+    @Test func replaceAllWithIdenticalListSkipsPersist() throws {
+        let directory = try makeTemporaryDirectory()
+        let notifier = CountingNotifier()
+        let store = AlarmStore(directory: directory, darwin: notifier)
+        let alarms = [Alarm(label: "Same", hour: 5, minute: 5)]
+        store.replaceAll(alarms)
+        let postsAfterFirst = notifier.posts
+
+        store.replaceAll(alarms)
+
+        #expect(store.alarms == alarms)
+        #expect(notifier.posts == postsAfterFirst)
+    }
+
     @Test func corruptedJSONFallsBackToEmptyList() throws {
         let directory = try makeTemporaryDirectory()
         try Data("not json".utf8).write(to: AlarmStore.fileURL(in: directory))
@@ -101,4 +128,9 @@ struct AlarmStoreTests {
 
 private final class SilentNotifier: AlarmChangeSignaling {
     func post(_ notification: DarwinNotification) {}
+}
+
+private final class CountingNotifier: AlarmChangeSignaling {
+    private(set) var posts = 0
+    func post(_ notification: DarwinNotification) { posts += 1 }
 }
