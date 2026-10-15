@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!--
+  Merged into the generated Info.plist of both XPC service targets
+  (GENERATE_INFOPLIST_FILE = YES + INFOPLIST_FILE).
+  The XPCService dict is REQUIRED: without it, launchd/xpcproxy cannot
+  resolve the embedded service and every NSXPCConnection(serviceName:)
+  lookup fails with "Connection init failed at lookup with error 3 -
+  No such process" (verified on macOS 26.5.1).
+-->
+<dict>
+	<key>XPCService</key>
+	<dict>
+		<key>ServiceType</key>
+		<string>Application</string>
+	</dict>
+</dict>
+</plist>

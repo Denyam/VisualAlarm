@@ -45,6 +45,7 @@
 		C0DE000000000000000000B2 /* VisualAlarmRunner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualAlarmRunner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0DE000000000000000000CA /* co.denis.VisualAlarm.agent.plist */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text.plist.xml; path = co.denis.VisualAlarm.agent.plist; sourceTree = "<group>"; };
 		C0DE000000000000000000CC /* VisualAlarm.entitlements */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text.plist.entitlements; name = VisualAlarm.entitlements; path = Support/VisualAlarm.entitlements; sourceTree = "<group>"; };
+		C0DE000000000000000000CD /* XPCServiceInfo.plist */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text.plist.xml; path = XPCServiceInfo.plist; sourceTree = "<group>"; };
 		D0DE000000000000000000A2 /* VisualAlarmAgentXPC.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = VisualAlarmAgentXPC.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0DE000000000000000000B2 /* VisualAlarmRunnerXPC.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = VisualAlarmRunnerXPC.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -323,6 +324,7 @@
 			children = (
 				C0DE000000000000000000CA /* co.denis.VisualAlarm.agent.plist */,
 				C0DE000000000000000000CC /* VisualAlarm.entitlements */,
+				C0DE000000000000000000CD /* XPCServiceInfo.plist */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -1124,6 +1126,7 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Support/XPCServiceInfo.plist;
 				INFOPLIST_KEY_LSUIElement = NO;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
@@ -1149,6 +1152,7 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Support/XPCServiceInfo.plist;
 				INFOPLIST_KEY_LSUIElement = NO;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
@@ -1174,6 +1178,7 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Support/XPCServiceInfo.plist;
 				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
@@ -1199,6 +1204,7 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Support/XPCServiceInfo.plist;
 				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
