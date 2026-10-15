@@ -2,10 +2,10 @@
  * File: XPCRunnerLauncher.swift
  * Created: 2026-10-15
  *
- * Presents a firing alarm through the runner XPC service. Replaces the old
- * NSWorkspace launch of VisualAlarmRunner.app: the alarm ID and label cross
- * the XPC boundary in `showAlarmWindow(alarmID:label:reply:)`, so no
- * fire-request file has to be shared between processes anymore.
+ * Presents a firing alarm through the runner XPC service. The alarm ID and
+ * label cross the XPC boundary in `showAlarmWindow(alarmID:label:reply:)`,
+ * so no fire-request file has to be shared between processes anymore (the
+ * previous NSWorkspace-launched helper app needed one).
  */
 
 #if os(macOS)

@@ -31,18 +31,18 @@ obtainable for runtime testing — see AGENTS.md.
 1. Launch the app and tap **+** to add an alarm.
 2. Set the time and choose repeating days (or leave empty for daily).
 3. Toggle the alarm on/off from the list.
-4. On macOS, the app registers a background agent automatically on launch.
+4. On macOS, register the background agent from the app (agent status banner) so alarms fire while the app is closed.
 5. When an alarm fires, the visual effect starts immediately; tap **Stop** to dismiss.
 
 ## Architecture
 
 | Component | Role |
 |-----------|------|
-| `VisualAlarm.app` | SwiftUI UI, alarm store, registration |
-| `VisualAlarmAgent.app` | macOS resident scheduler (LaunchAgent) |
-| `VisualAlarmRunner.app` | macOS alarm window (sound, flicker, Stop) |
+| `VisualAlarm.app` | SwiftUI UI, alarm store mirror, agent registration |
+| `VisualAlarmAgentXPC.xpc` | XPC service: owns `alarms.json` storage (own container); resident scheduler under launchd, on-demand RPC otherwise |
+| `VisualAlarmRunnerXPC.xpc` | XPC service: macOS alarm window (sound, flicker, Stop) |
 
-Shared data lives in an App Group container (`alarms.json`), signaled via Darwin notifications.
+The app pushes its full alarm list to the agent via the `syncAlarms` XPC call; the agent persists it in its own container. Resident and on-demand agent instances coordinate through the shared file plus Darwin notifications.
 
 ## iOS Background Limitations
 

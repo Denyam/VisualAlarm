@@ -175,3 +175,37 @@ torch. License: GPLv3. Goal: Mac App Store distributable.
 - Test files referencing `Alarm` with non-default `id` must place the `id:`
   argument before `hour:` — Swift enforces parameter order even with labeled
   defaults.
+
+### XPC services + SMAppService agent (feature/xpc-services)
+- Embedded XPC services NEED the `XPCService` dict
+  (`ServiceType = Application`) in their Info.plist. `GENERATE_INFOPLIST_FILE
+  = YES` does not add it; without it `NSXPCConnection(serviceName:)` fails at
+  lookup with `Connection init failed at lookup with error 3 - No such
+  process` and xpcproxy never spawns the service. Fix: merge a plist via
+  `INFOPLIST_FILE = Support/XPCServiceInfo.plist` (Xcode merges file keys
+  into the generated plist — verified on Xcode 26).
+- SMAppService/BTM-managed launches ENFORCE LAUNCH CONSTRAINTS: ad-hoc-signed
+  (TeamIdentifier=not set) embedded code is SIGKILLed ("Launch Constraint
+  Violation" in `~/Library/Logs/DiagnosticReports`); the job crash-loops and
+  `launchctl print` shows `last exit code = 78: EX_CONFIG`,
+  `job state = spawn failed`. Apple Development signing (same team on app +
+  embedded .xpc) passes; bare `launchctl bootstrap` jobs are NOT constrained.
+  The project signs mac targets ad-hoc (user decision) — the resident agent
+  therefore cannot spawn under launchd on macOS 15+/26; flip
+  `CODE_SIGN_IDENTITY[sdk=macosx*]` + `DEVELOPMENT_TEAM[sdk=macosx*]` locally
+  to run it (verified working: resident stays up, on-demand RPC + resident
+  scheduler coexist, both instances share the agent's own container).
+- Changing an app's code-signing identity while its container exists can make
+  `secinitd` block on an unanswered `displaySharingConsentPrompt` (a
+  CFUserNotification). secinitd's per-bundle-id queue then wedges and EVERY
+  later launch of that bundle id hangs in dyld → `_libsecinit_appsandbox` →
+  mach_msg (no output, no crash report). Diagnose via `sample <hung pid>`
+  (libsecinit in stack) and `sample <secinitd pid>` (consent prompt on a
+  workqueue). Recovers when the dialog is answered or times out (~10 min);
+  respawning secinitd does not clear an in-flight prompt.
+- The agent binary is dual-mode (env `VA_AGENT_RESIDENT=1` from the
+  LaunchAgent plist → resident scheduler; absent → `NSXPCListener.service()`
+  RPC endpoint). Direct exec without the env prints "An XPC Service cannot be
+  run directly." and traps — expected. The two instances (resident + xpcproxy
+  on-demand) deliberately coexist and coordinate via the shared
+  `alarms.json` + Darwin notification.
