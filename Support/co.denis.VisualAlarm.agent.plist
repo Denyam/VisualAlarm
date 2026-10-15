@@ -12,5 +12,12 @@
 	<true/>
 	<key>ProcessType</key>
 	<string>Background</string>
+	<!-- launchd (BundleProgram) is not an xpcproxy context: the binary must
+	     skip NSXPCListener.service() and only run the scheduler. -->
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>VA_AGENT_RESIDENT</key>
+		<string>1</string>
+	</dict>
 </dict>
 </plist>

@@ -2,7 +2,7 @@
  * File: Service.swift
  * Created: 2026-10-14
  *
- * Agent XPC Service — resident scheduler launched by launchd.
+ * Agent service — scheduler + alarm storage for the VisualAlarm agent.
  * Runs independently of the main app so alarms fire even when app is closed.
  */
 
@@ -11,6 +11,22 @@ import AppKit
 
 @MainActor
 final class AgentService: NSObject, AlarmSchedulerProtocol, NSXPCListenerDelegate {
+
+    /// How this process was launched.
+    enum Mode {
+        /// launchd runs the binary as a login item (`BundleProgram`): owns
+        /// the fire loop. No XPC listener — service listeners only work in
+        /// an xpcproxy launch context.
+        case resident
+        /// xpcproxy spawned it on demand for the app's connection: serves
+        /// RPCs and owns alarm persistence; the resident instance re-reads
+        /// the shared store whenever `.alarmsDidChange` fires.
+        case service
+    }
+
+    private let mode: Mode
+    // AlarmStore defaults to AppContainer.directory — the current process's
+    // Application Support, i.e. inside the agent's own sandbox container.
     private let store = AlarmStore.shared
     // Built lazily after super.init(): the onFire closure captures `self`.
     private lazy var scheduler: AlarmScheduler = AlarmScheduler(
@@ -23,11 +39,17 @@ final class AgentService: NSObject, AlarmSchedulerProtocol, NSXPCListenerDelegat
     private let darwin = DarwinNotificationCenter.shared
     private var tokens: [DarwinObservationToken] = []
 
-    override init() {
+    init(mode: Mode) {
+        self.mode = mode
         super.init()
-        // Drive the fire loop; without it the scheduler never evaluates alarms.
-        loopTask = scheduler.run()
-        setupObservers()
+        if mode == .resident {
+            print("agent: resident scheduler with \(store.alarms.count) alarm(s)")
+            // Drive the fire loop; without it the scheduler never evaluates
+            // alarms. The on-demand instance must NOT run it — two loops
+            // would fire every alarm twice.
+            loopTask = scheduler.run()
+            setupObservers()
+        }
     }
 
     // MARK: - NSXPCListenerDelegate
@@ -76,7 +98,13 @@ final class AgentService: NSObject, AlarmSchedulerProtocol, NSXPCListenerDelegat
 
     nonisolated func resync(reply: @escaping () -> Void) {
         Task { @MainActor in
-            scheduler.resync()
+            if mode == .resident {
+                scheduler.resync()
+            } else {
+                // On-demand instance: hand off to the resident scheduler,
+                // which re-reads the shared store on this signal.
+                darwin.post(.alarmsDidChange)
+            }
             reply()
         }
     }
@@ -84,7 +112,9 @@ final class AgentService: NSObject, AlarmSchedulerProtocol, NSXPCListenerDelegat
     // MARK: - Private
 
     private func setupObservers() {
-        // Reload schedule context when alarms change anywhere.
+        // The app's edits reach this instance through the store: the
+        // on-demand instance persists a sync and AlarmStore posts the
+        // Darwin signal — reload the schedule context when it arrives.
         tokens.append(darwin.addObserver(for: .alarmsDidChange) { [weak self] in
             Task { @MainActor in self?.resync("alarms changed") }
         })
