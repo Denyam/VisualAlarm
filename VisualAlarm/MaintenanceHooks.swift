@@ -18,7 +18,7 @@ enum MaintenanceHooks {
         if let seconds = ProcessInfo.processInfo.environment["VA_SMOKE_SECONDS"]
             .flatMap(Double.init).map({ Int($0) }) {
             let store = AlarmStore.shared
-            print("app: loaded \(store.alarms.count) alarm(s) from \(AppGroup.directory.path)")
+            print("app: loaded \(store.alarms.count) alarm(s) from \(AppContainer.directory.path)")
             fflush(stdout)
             try? await Task.sleep(seconds: TimeInterval(seconds))
             NSApp.terminate(nil)

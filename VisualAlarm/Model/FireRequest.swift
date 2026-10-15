@@ -18,7 +18,7 @@ struct FireRequest: Codable, Equatable {
         _ request: FireRequest,
         directory: URL? = nil
     ) throws {
-        let resolved = directory ?? AppGroup.directory
+        let resolved = directory ?? AppContainer.directory
         let data = try JSONEncoder().encode(request)
         try data.write(
             to: resolved.appendingPathComponent(filename),
@@ -27,7 +27,7 @@ struct FireRequest: Codable, Equatable {
     }
 
     static func read(directory: URL? = nil) -> FireRequest? {
-        let resolved = directory ?? AppGroup.directory
+        let resolved = directory ?? AppContainer.directory
         guard let data = try? Data(
             contentsOf: resolved.appendingPathComponent(filename)
         ) else { return nil }

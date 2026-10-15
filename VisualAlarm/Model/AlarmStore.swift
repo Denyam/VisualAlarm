@@ -7,8 +7,9 @@ import Combine
 import Foundation
 import os
 
-/// Owns the alarm list and persists it as JSON inside a shared directory so
-/// that the app, agent, and runner processes observe the same state.
+/// Owns the alarm list and persists it as JSON inside the app's sandbox
+/// container so that the app and the XPC services embedded in its bundle
+/// observe the same state.
 @MainActor
 final class AlarmStore: ObservableObject {
     static let shared = AlarmStore()
@@ -27,21 +28,21 @@ final class AlarmStore: ObservableObject {
 
     /// - Parameters:
     ///   - directory: Directory holding `alarms.json`.
-    ///     Defaults to the App Group container with an Application Support fallback.
+    ///     Defaults to the app container's Application Support directory.
     ///   - darwin: Change-signal center; every successful mutation posts
     ///     `.alarmsDidChange` so resident agents reload immediately.
     init(
         directory: URL? = nil,
         darwin: any AlarmChangeSignaling = DarwinNotificationCenter.shared
     ) {
-        let resolved = directory ?? AppGroup.directory
-        fileURL = resolved.appendingPathComponent(AppGroup.alarmsFilename)
+        let resolved = directory ?? AppContainer.directory
+        fileURL = resolved.appendingPathComponent(AppContainer.alarmsFilename)
         self.darwin = darwin
         load()
     }
 
     static func fileURL(in directory: URL) -> URL {
-        directory.appendingPathComponent(AppGroup.alarmsFilename)
+        directory.appendingPathComponent(AppContainer.alarmsFilename)
     }
 
     @discardableResult
