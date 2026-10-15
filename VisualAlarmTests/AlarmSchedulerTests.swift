@@ -208,7 +208,7 @@ struct AlarmSchedulerTests {
                     await cursorValues.record(scheduler.catchupCursorForTest)
                 }
                 group.addTask {
-                    scheduler.resync()
+                    await MainActor.run { scheduler.resync() }
                     await cursorValues.record(scheduler.catchupCursorForTest)
                 }
             }

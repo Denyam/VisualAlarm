@@ -26,7 +26,8 @@ struct VASwiftUICompatTests {
     }
 
     @Test func stateObjectShimProjectionWritesThroughToTheObject() {
-        let wrapper = VAStateObject(wrappedValue: Counter())
+        // projectedValue is a lazy var (mutating getter), so the wrapper is var.
+        var wrapper = VAStateObject(wrappedValue: Counter())
         wrapper.projectedValue.count.wrappedValue = 5
         #expect(wrapper.wrappedValue.count == 5)
     }

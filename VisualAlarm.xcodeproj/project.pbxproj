@@ -137,11 +137,13 @@
 			membershipExceptions = (
 				AppDelegate.swift,
 				Assets.xcassets,
+				Engine/AgentRegistering.swift,
 				Engine/AlarmEffectCoordinator.swift,
 				Engine/BrightnessController.swift,
 				Engine/FlickerEffectController.swift,
 				Engine/HapticSignaling.swift,
 				Engine/IOSAlarmScheduler.swift,
+				Engine/LoginItemRegistrar.swift,
 				Engine/MacBrightnessController.swift,
 				Engine/MacBrightnessControlling.swift,
 				Engine/NotificationDelegate.swift,
@@ -170,17 +172,20 @@
 			membershipExceptions = (
 				AppDelegate.swift,
 				Assets.xcassets,
+				Engine/AgentRegistering.swift,
 				Engine/AlarmEffectCoordinator.swift,
 				Engine/BrightnessController.swift,
 				Engine/FlickerEffectController.swift,
 				Engine/HapticSignaling.swift,
 				Engine/IOSAlarmScheduler.swift,
+				Engine/LoginItemRegistrar.swift,
 				Engine/MacBrightnessController.swift,
 				Engine/MacBrightnessControlling.swift,
 				Engine/NotificationDelegate.swift,
 				Engine/NotificationScheduling.swift,
 				Engine/RunnerLaunching.swift,
 				Engine/SMAppServiceRegistrar.swift,
+				Engine/TaskSleep.swift,
 				Engine/TorchController.swift,
 				Engine/WorkspaceRunnerLauncher.swift,
 				main.swift,
@@ -618,7 +623,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "if [ \"$PLATFORM_NAME\" != \"macosx\" ]; then\n\texit 0\nfi\nset -euo pipefail\nXPC_DST=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/Contents/XPCServices\"\nLA_DST=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/Contents/Library/LaunchAgents\"\nmkdir -p \"$XPC_DST\" \"$LA_DST\"\nrm -rf \"$XPC_DST/VisualAlarmAgentXPC.xpc\" \"$XPC_DST/VisualAlarmRunnerXPC.xpc\"\ncp -R \"$BUILT_PRODUCTS_DIR/VisualAlarmAgentXPC.xpc\" \"$BUILT_PRODUCTS_DIR/VisualAlarmRunnerXPC.xpc\" \"$XPC_DST/\"\ncp \"$SRCROOT/Support/co.denis.VisualAlarm.agent.plist\" \"$LA_DST/\"\n";
+			shellScript = "if [ \"$PLATFORM_NAME\" != \"macosx\" ]; then\n\t# Xcode pre-creates the declared output directories before running this\n\t# phase; an empty Contents/ at an iOS bundle root makes CodeSign fail\n\t# with \"unsealed contents present in the bundle root\".\n\trm -rf \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/Contents\"\n\texit 0\nfi\nset -euo pipefail\nXPC_DST=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/Contents/XPCServices\"\nLA_DST=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/Contents/Library/LaunchAgents\"\nmkdir -p \"$XPC_DST\" \"$LA_DST\"\nrm -rf \"$XPC_DST/VisualAlarmAgentXPC.xpc\" \"$XPC_DST/VisualAlarmRunnerXPC.xpc\"\ncp -R \"$BUILT_PRODUCTS_DIR/VisualAlarmAgentXPC.xpc\" \"$BUILT_PRODUCTS_DIR/VisualAlarmRunnerXPC.xpc\" \"$XPC_DST/\"\ncp \"$SRCROOT/Support/co.denis.VisualAlarm.agent.plist\" \"$LA_DST/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

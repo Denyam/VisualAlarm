@@ -40,10 +40,3 @@ final class RunnerService: NSObject, AlarmRunnerProtocol, NSXPCListenerDelegate 
         }
     }
 }
-
-// Entry point — on-demand XPC service
-let listener = NSXPCListener.service()
-let delegate = RunnerService()
-listener.delegate = delegate
-listener.resume()
-RunLoop.current.run()

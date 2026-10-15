@@ -36,7 +36,9 @@ final class AlarmCoordinator {
             return
         }
 
-        window = StopWindow(alarmLabel: label)
+        window = StopWindow(alarmLabel: label) { [weak self] in
+            self?.closeAlarm()
+        }
         window?.show()
 
         // Activation only sticks once the run loop is running

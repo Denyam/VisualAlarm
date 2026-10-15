@@ -9,27 +9,35 @@
 import Foundation
 import AppKit
 
+@MainActor
 final class AgentService: NSObject, AlarmSchedulerProtocol, NSXPCListenerDelegate {
     private let store = AlarmStore.shared
-    private let scheduler: AlarmScheduler
+    // Built lazily after super.init(): the onFire closure captures `self`.
+    private lazy var scheduler: AlarmScheduler = AlarmScheduler(
+        alarms: { [store] in store.alarms },
+        onFire: { [weak self] alarm in
+            self?.launchRunner(for: alarm)
+        }
+    )
     private var loopTask: Task<Void, Never>?
     private let darwin = DarwinNotificationCenter.shared
     private var tokens: [DarwinObservationToken] = []
 
     override init() {
-        self.scheduler = AlarmScheduler(
-            alarms: { [store] in store.alarms },
-            onFire: { [weak self] alarm in
-                self?.launchRunner(for: alarm)
-            }
-        )
         super.init()
+        // Drive the fire loop; without it the scheduler never evaluates alarms.
+        loopTask = scheduler.run()
         setupObservers()
     }
 
     // MARK: - NSXPCListenerDelegate
 
-    func listener(_ listener: NSXPCListener, shouldAcceptNewConnection connection: NSXPCConnection) -> Bool {
+    // XPC delivers delegate callbacks and exported-method calls off the main
+    // thread, so these entry points stay nonisolated and hop to the main actor.
+    nonisolated func listener(
+        _ listener: NSXPCListener,
+        shouldAcceptNewConnection connection: NSXPCConnection
+    ) -> Bool {
         connection.exportedInterface = NSXPCInterface(with: AlarmSchedulerProtocol.self)
         connection.exportedObject = self
         connection.resume()
@@ -38,32 +46,39 @@ final class AgentService: NSObject, AlarmSchedulerProtocol, NSXPCListenerDelegat
 
     // MARK: - AlarmSchedulerProtocol
 
-    func scheduleAlarm(_ alarmData: Data, reply: @escaping (Bool) -> Void) {
-        guard let alarm = XPCRepresentation.decodeAlarm(alarmData) else {
-            reply(false)
-            return
+    nonisolated func scheduleAlarm(_ alarmData: Data, reply: @escaping (Bool) -> Void) {
+        Task { @MainActor in
+            guard let alarm = XPCRepresentation.decodeAlarm(alarmData) else {
+                reply(false)
+                return
+            }
+            store.upsert(alarm)
+            reply(true)
         }
-        store.upsert(alarm)
-        reply(true)
     }
 
-    func cancelAlarm(id: String, reply: @escaping (Bool) -> Void) {
-        guard let uuid = UUID(uuidString: id) else {
-            reply(false)
-            return
+    nonisolated func cancelAlarm(id: String, reply: @escaping (Bool) -> Void) {
+        Task { @MainActor in
+            guard let uuid = UUID(uuidString: id) else {
+                reply(false)
+                return
+            }
+            store.delete(id: uuid)
+            reply(true)
         }
-        store.delete(id: uuid)
-        reply(true)
     }
 
-    func getPendingAlarms(reply: @escaping (Data?) -> Void) {
-        let data = XPCRepresentation.encode(store.alarms)
-        reply(data)
+    nonisolated func getPendingAlarms(reply: @escaping (Data?) -> Void) {
+        Task { @MainActor in
+            reply(XPCRepresentation.encode(store.alarms))
+        }
     }
 
-    func resync(reply: @escaping () -> Void) {
-        scheduler.resync()
-        reply()
+    nonisolated func resync(reply: @escaping () -> Void) {
+        Task { @MainActor in
+            scheduler.resync()
+            reply()
+        }
     }
 
     // MARK: - Private
@@ -111,10 +126,3 @@ final class AgentService: NSObject, AlarmSchedulerProtocol, NSXPCListenerDelegat
         }
     }
 }
-
-// Entry point — launchd calls this, keeps process alive
-let listener = NSXPCListener.service()
-let delegate = AgentService()
-listener.delegate = delegate
-listener.resume()
-RunLoop.current.run()
